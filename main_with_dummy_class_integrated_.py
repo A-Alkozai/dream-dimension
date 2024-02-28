@@ -2,7 +2,7 @@ import SimpleGUICS2Pygame.simpleguics2pygame as simplegui
 from gravity import Gravity
 from character import Character
 from floor import Floor
-from dummy_character import DummyCharacter
+from npc import Npc
 
 
 def draw(canvas):
@@ -43,15 +43,13 @@ frame.set_keydown_handler(character.key_down)
 frame.set_keyup_handler(character.key_up)
 
 # 4. creating dummy character
-dummy_character = DummyCharacter(floor, frame, canvas_width)
+dummy_character = Npc(floor, frame, canvas_width)
 
 # list of all entities
 all_entities = [character, floor, dummy_character]
 
 # Gravity creation
 gravity = Gravity(all_entities)
-
-
 
 # starting frame
 frame.start()

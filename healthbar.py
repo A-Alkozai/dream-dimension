@@ -1,4 +1,5 @@
-import simplegui
+import SimpleGUICS2Pygame.simpleguics2pygame as simplegui
+
 
 # Class to represent a health bar
 class HealthBar:
@@ -26,6 +27,7 @@ class HealthBar:
         # Ensure new health value is within bounds
         self.current_health = min(max(new_health, 0), self.max_health)
 
+
 # Draw handler function for the frame
 def draw(canvas):
     global health_bar
@@ -33,11 +35,13 @@ def draw(canvas):
     # Draw the health bar on the canvas
     health_bar.draw(canvas)
 
+
 # Function to reduce health when "Reduce Health" button is clicked
 def reduce_health():
     global health_bar
     # Reduce health by 10 units
     health_bar.update(health_bar.current_health - 10)
+
 
 # Function to simulate "suicide" by setting health to 0 when "Suicide" button is clicked
 def suicide():
@@ -47,10 +51,12 @@ def suicide():
     # Placeholder for game restart or other actions
     print("Game restarted!")  # Placeholder for game restart code
 
+
 # Function to kill the game when "Kill Game" button is clicked
 def kill_game():
     # Placeholder for game termination actions
     print("Game killed!")  # Placeholder for game kill actions
+
 
 # Initialize health bar with maximum health of 100
 health_bar = HealthBar(100, (50, 50), (200, 20), "red")

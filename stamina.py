@@ -1,4 +1,5 @@
-import simplegui
+import SimpleGUICS2Pygame.simpleguics2pygame as simplegui
+
 
 # Class to represent a StaminaBar
 class StaminaBar:
@@ -56,12 +57,14 @@ class StaminaBar:
             self.is_movement_key_pressed = False
             self.stop_timer()
 
+
 # Draw handler function for the frame
 def draw(canvas):
     global stamina_bar
 
     # Draw the stamina bar on the canvas
     stamina_bar.draw(canvas)
+
 
 # Create a frame
 frame = simplegui.create_frame("Stamina Bar Example", 300, 200)
