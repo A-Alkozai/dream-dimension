@@ -8,7 +8,7 @@ def draw(canvas):
     gravity.gravity()
     for entity in all_entities:
         entity.draw(canvas)
-
+ 
 
 # dimensions of canvas
 canvas_width = 900
