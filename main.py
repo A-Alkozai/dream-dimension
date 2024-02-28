@@ -20,7 +20,7 @@ floor = Floor((0, canvas_height-101), (canvas_width-1, canvas_height-101), 100, 
 # Character creation
 
 # 1. loading image
-img = simplegui.load_image("/Users/ahadalkozai/Downloads/5a4bc99c2da5ad73df7efe66.png")
+img = simplegui._load_local_image("character_img.png")
 
 # 2. making variables
 img_dim = (img.get_width(), img.get_height())
