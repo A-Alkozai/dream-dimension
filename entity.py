@@ -5,7 +5,7 @@ from vector import Vector
 class Entity:
     def __init__(self, 
                  position=Vector(), 
-                 velocity=Vector(), 
+                 velocity=Vector(),
                  rotation=0, 
                  img_url="", 
                  img_dest_dim=None,
