@@ -2,18 +2,14 @@ import SimpleGUICS2Pygame.simpleguics2pygame as simplegui
 from vector import Vector
 from gravity_entity import GravityEntity
 
-
-class Npc(GravityEntity):
-    def __init__(self, floor, frame, canvas_width):
+class Enemy(GravityEntity):
+    def __init__(self, floor, canvas_width):
         super().__init__()
         # overriding gravity-related variables
         self.gravity = False  # Gravity is not applied to the dummy character
 
         # reference to the floor
         self.floor = floor
-
-        # reference to the frame
-        self.frame = frame
 
         # canvas width
         self.canvas_width = canvas_width
@@ -40,18 +36,18 @@ class Npc(GravityEntity):
     def update(self):
         self.move()
 
-        # ensure the dummy stays within the bounds of the floor
+        # ensure the enemy stays within the bounds of the floor
         self.img_pos.x = max(self.img_pos.x, self.floor.start.x + self.img_dest_dim[0] / 2)
         self.img_pos.x = min(self.img_pos.x, self.floor.end.x - self.img_dest_dim[0] / 2)
 
     def move(self):
-        # Move the dummy character horizontally across the canvas
+        # Move the enemy character horizontally across the canvas
         self.img_pos.x += self.velocity.x
 
-        # If the dummy character reaches the right edge, reverse direction
+        # If the enemy haracter reaches the right edge, reverse direction
         if self.img_pos.x + self.img_dest_dim[0] / 2 >= self.canvas_width:
             self.velocity.x = -abs(self.velocity.x)
 
-        # If the dummy character reaches the left edge, reverse direction
+        # If the enemy character reaches the left edge, reverse direction
         elif self.img_pos.x - self.img_dest_dim[0] / 2 <= 0:
             self.velocity.x = abs(self.velocity.x)
