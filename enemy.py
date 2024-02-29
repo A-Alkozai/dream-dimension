@@ -15,7 +15,7 @@ class Enemy(GravityEntity):
         self.canvas_width = canvas_width
 
         # variables to make image
-        self.img = simplegui._load_local_image("npc.png")
+        self.img = simplegui._load_local_image("images/npc.png")
         self.img_centre = (self.img.get_width() / 2, self.img.get_height() / 2)
         self.img_dim = (self.img.get_width(), self.img.get_height())
         self.img_dest_dim = (100, 100)
