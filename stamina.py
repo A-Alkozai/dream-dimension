@@ -4,14 +4,13 @@ import SimpleGUICS2Pygame.simpleguics2pygame as simplegui
 # Class to represent a StaminaBar
 class StaminaBar:
     def __init__(self, max_stamina, position, width, height, color, decrease_rate):
-        # Initialize stamina bar attributes
-        self.max_stamina = max_stamina  # Maximum stamina value
-        self.current_stamina = max_stamina  # Current stamina value
-        self.position = position  # Position of the stamina bar
-        self.width = width  # Width of the stamina bar
-        self.height = height  # Height of the stamina bar
-        self.color = color  # Color of the stamina bar
-        self.decrease_rate = decrease_rate  # Rate at which stamina decreases (per second)
+        self.max_stamina = max_stamina
+        self.current_stamina = max_stamina  
+        self.position = position  
+        self.width = width  
+        self.height = height  
+        self.color = color  
+        self.decrease_rate = decrease_rate  
 
         # Create a timer to decrease stamina
         self.timer = simplegui.create_timer(1000, self.decrease_stamina)
