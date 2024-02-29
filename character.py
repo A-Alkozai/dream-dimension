@@ -1,8 +1,8 @@
 import SimpleGUICS2Pygame.simpleguics2pygame as simplegui
 from vector import Vector
-from gravity_entity import GravityEntity
+from entity import Entity
 
-class Character(GravityEntity):
+class Character(Entity):
     def __init__(self, ground_level):
         super().__init__()
 

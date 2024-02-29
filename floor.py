@@ -1,9 +1,9 @@
 import SimpleGUICS2Pygame.simpleguics2pygame
 from vector import Vector
-from gravity_entity import GravityEntity
+from entity import Entity
 
 
-class Floor(GravityEntity):
+class Floor(Entity):
     def __init__(self, start, end, border, colour):
         super().__init__()
 

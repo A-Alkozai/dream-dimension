@@ -1,8 +1,8 @@
 import SimpleGUICS2Pygame.simpleguics2pygame as simplegui
 from vector import Vector
-from gravity_entity import GravityEntity
+from entity import Entity
 
-class Enemy(GravityEntity):
+class Enemy(Entity):
     def __init__(self, floor, canvas_width):
         super().__init__()
         # overriding gravity-related variables
