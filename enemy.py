@@ -5,25 +5,15 @@ from entity import Entity
 class Enemy(Entity):
     def __init__(self, floor, canvas_width, **kwargs):
         super().__init__(**kwargs)
-        # overriding gravity-related variables
+
         self.gravity = False  # Gravity is not applied to the dummy character
 
-        # reference to the floor
         self.floor = floor
-
-        # canvas width
         self.canvas_width = canvas_width
 
-        # variables to make image
-        self.img = simplegui._load_local_image("images/npc.png")
-        self.img_centre = (self.img.get_width() / 2, self.img.get_height() / 2)
-        self.img_dim = (self.img.get_width(), self.img.get_height())
-        self.img_dest_dim = (100, 100)
+        #self.img = simplegui._load_local_image("images/npc.png")
 
-        # initial position
         self.position = Vector(20, (self.floor.start.y-50) - self.img_dest_dim[1])
-
-        # velocity variable
         self.velocity = Vector(2, 0)  # Initial velocity for moving right
 
     def draw(self, canvas):

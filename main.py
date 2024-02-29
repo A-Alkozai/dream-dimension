@@ -7,19 +7,19 @@ from enemy import Enemy
 from gun import Gun
 
 # dimensions of canvas
-canvas_width = 900
-canvas_height = 700
+canvas_width = 1920
+canvas_height = 1080
 
 floor = Floor((0, canvas_height-101), (canvas_width-1, canvas_height-101), 100, "Grey")
 
 # creating character
-character = Character(floor.start, floor.border, img_url="images/character_img.png", img_dest_dim=(100,100))
+character = Character(floor, img_url="images/character_img.png", img_dest_dim=(70,70))
 
-enemy = Enemy(floor, canvas_width, img_dest_dim=(100,100))
+enemy = Enemy(floor, canvas_width, img_url="images/npc.png", img_dest_dim=(100,100))
 
-pistol = Gun()
+#pistol = Gun()
 
-all_entities = [character, floor, enemy, pistol]
+all_entities = [character, floor, enemy]
 
 gravity = Gravity(all_entities)
 

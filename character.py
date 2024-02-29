@@ -3,23 +3,12 @@ from vector import Vector
 from entity import Entity
 
 class Character(Entity):
-    def __init__(self, floor_start, floor_border, **kwargs):
+    def __init__(self, floor, **kwargs):
         super().__init__(**kwargs)
 
-#floor_level = floor.start.y - floor.border - img_dest_dim[1]/2
-        # overriding gravity-related variables
         self.gravity = True
 
-        # variables to make image
-        #self.img = simplegui._load_local_image("images/character_img.png")
-        #self.img_dim = (self.img.get_width(), self.img.get_height())
-        #self.img_centre = (self.img_dim[0]/2, self.img_dim[1]/2)
-        #self.img_dest_dim = (100, 100)
-        #self.img_pos = Vector(0, 0)
-        #self.img_rotation = 0
-
-        # ground level
-        self.ground = floor_start.y - floor_border - self.img_dest_dim[1]/2
+        self.ground = floor.start.y - floor.border - self.img_dest_dim[1]/2
 
         # variables for key binds
         self.w = False
