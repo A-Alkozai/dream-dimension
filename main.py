@@ -13,7 +13,7 @@ floor = Floor((0, canvas_height-101), (canvas_width-1, canvas_height-101), 100, 
 
 # Character creation
 # load character image
-img = simplegui._load_local_image("character_img.png")
+img = simplegui._load_local_image("images/character_img.png")
 
 # making variables
 img_dim = (img.get_width(), img.get_height())
@@ -23,8 +23,8 @@ img_pos = (canvas_width/2, floor.start.y-floor.border-img_dest_dim[1]/2)
 img_rot = 0
 
 # creating character
-character = Character(img, img_centre, img_dim,
-                      img_pos, img_dest_dim, img_rot)
+floor_level = floor.start.y-floor.border-img_dest_dim[1]/2
+character = Character(floor_level)
 
 # creating dummy enemy
 enemy = Enemy(floor, canvas_width)

@@ -2,25 +2,23 @@ import SimpleGUICS2Pygame.simpleguics2pygame as simplegui
 from vector import Vector
 from gravity_entity import GravityEntity
 
-
 class Character(GravityEntity):
-    def __init__(self, img, img_centre, img_dim,
-                 img_pos, img_dest_dim, img_rotation=0):
+    def __init__(self, ground_level):
         super().__init__()
 
         # overriding gravity-related variables
         self.gravity = True
 
-        # ground level
-        self.ground = img_pos[1]
-
         # variables to make image
-        self.img = img
-        self.img_centre = img_centre
-        self.img_dim = img_dim
-        self.img_pos = Vector(img_pos[0], img_pos[1])
-        self.img_dest_dim = img_dest_dim
-        self.img_rotation = img_rotation
+        self.img = simplegui._load_local_image("images/character_img.png")
+        self.img_dim = (self.img.get_width(), self.img.get_height())
+        self.img_centre = (self.img_dim[0]/2, self.img_dim[1]/2)
+        self.img_dest_dim = (100, 100)
+        self.img_pos = Vector(0, 0)
+        self.img_rotation = 0
+
+        # ground level
+        self.ground = ground_level
 
         # velocity variable
         self.velocity = Vector(0, 0)
