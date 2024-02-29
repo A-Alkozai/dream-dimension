@@ -3,8 +3,8 @@ from vector import Vector
 from entity import Entity
 
 class Enemy(Entity):
-    def __init__(self, floor, canvas_width):
-        super().__init__()
+    def __init__(self, floor, canvas_width, **kwargs):
+        super().__init__(**kwargs)
         # overriding gravity-related variables
         self.gravity = False  # Gravity is not applied to the dummy character
 
@@ -19,35 +19,37 @@ class Enemy(Entity):
         self.img_centre = (self.img.get_width() / 2, self.img.get_height() / 2)
         self.img_dim = (self.img.get_width(), self.img.get_height())
         self.img_dest_dim = (100, 100)
-        self.img_rotation = 0
 
         # initial position
-        self.img_pos = Vector(20, (self.floor.start.y-50) - self.img_dest_dim[1])
+        self.position = Vector(20, (self.floor.start.y-50) - self.img_dest_dim[1])
 
         # velocity variable
         self.velocity = Vector(2, 0)  # Initial velocity for moving right
 
     def draw(self, canvas):
         self.update()
-        canvas.draw_image(self.img, self.img_centre,
-                          self.img_dim, self.img_pos.get_p(),
-                          self.img_dest_dim, self.img_rotation)
+        canvas.draw_image(self.img,
+                          self.img_centre,
+                          self.img_dim,
+                          self.position.get_p(),
+                          self.img_dest_dim,
+                          self.rotation)
 
     def update(self):
         self.move()
 
         # ensure the enemy stays within the bounds of the floor
-        self.img_pos.x = max(self.img_pos.x, self.floor.start.x + self.img_dest_dim[0] / 2)
-        self.img_pos.x = min(self.img_pos.x, self.floor.end.x - self.img_dest_dim[0] / 2)
+        self.position.x = max(self.position.x, self.floor.start.x + self.img_dest_dim[0] / 2)
+        self.position.x = min(self.position.x, self.floor.end.x - self.img_dest_dim[0] / 2)
 
     def move(self):
         # Move the enemy character horizontally across the canvas
-        self.img_pos.x += self.velocity.x
+        self.position.x += self.velocity.x
 
         # If the enemy haracter reaches the right edge, reverse direction
-        if self.img_pos.x + self.img_dest_dim[0] / 2 >= self.canvas_width:
+        if self.position.x + self.img_dest_dim[0] / 2 >= self.canvas_width:
             self.velocity.x = -abs(self.velocity.x)
 
         # If the enemy character reaches the left edge, reverse direction
-        elif self.img_pos.x - self.img_dest_dim[0] / 2 <= 0:
+        elif self.position.x - self.img_dest_dim[0] / 2 <= 0:
             self.velocity.x = abs(self.velocity.x)

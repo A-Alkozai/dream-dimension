@@ -1,35 +1,25 @@
 import SimpleGUICS2Pygame.simpleguics2pygame as simplegui
+from entity import Entity
 from gravity import Gravity
 from character import Character
 from floor import Floor
 from enemy import Enemy
+from gun import Gun
 
 # dimensions of canvas
 canvas_width = 900
 canvas_height = 700
 
-# Floor creation
 floor = Floor((0, canvas_height-101), (canvas_width-1, canvas_height-101), 100, "Grey")
 
-# Character creation
-# load character image
-img = simplegui._load_local_image("images/character_img.png")
-
-# making variables
-img_dim = (img.get_width(), img.get_height())
-img_centre = (img_dim[0]/2, img_dim[1]/2)
-img_dest_dim = (100, 100)
-img_pos = (canvas_width/2, floor.start.y-floor.border-img_dest_dim[1]/2)
-img_rot = 0
-
 # creating character
-floor_level = floor.start.y-floor.border-img_dest_dim[1]/2
-character = Character(floor_level)
+character = Character(floor.start, floor.border, img_url="images/character_img.png", img_dest_dim=(100,100))
 
-# creating dummy enemy
-enemy = Enemy(floor, canvas_width)
+enemy = Enemy(floor, canvas_width, img_dest_dim=(100,100))
 
-all_entities = [character, floor, enemy]
+pistol = Gun()
+
+all_entities = [character, floor, enemy, pistol]
 
 gravity = Gravity(all_entities)
 
@@ -46,6 +36,8 @@ def draw(canvas):
 frame.set_draw_handler(draw)
 frame.set_keydown_handler(character.key_down)
 frame.set_keyup_handler(character.key_up)
+
+frame.set_mousedrag_handler(pistol.point_to_mouse)
 
 # starting frame
 frame.start()
