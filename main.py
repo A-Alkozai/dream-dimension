@@ -16,7 +16,7 @@ floor = Floor((0, canvas_height-90), (canvas_width-1, canvas_height-90), 90, "Gr
 # creating character
 player = Player(floor, img_url="images/player.png", img_dest_dim=(60,60), position=Vector(500, 200))
 
-enemy = Enemy(floor, canvas_width, img_url="images/npc.png", img_dest_dim=(60,60))
+enemy = Enemy(floor, canvas_width, character,speed=2, img_url="images/npc.png", img_dest_dim=(60,60))
 
 all_entities = [player, floor, enemy]
 
