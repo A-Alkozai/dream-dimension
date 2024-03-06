@@ -1,11 +1,11 @@
 import SimpleGUICS2Pygame.simpleguics2pygame as simplegui
+
 from entity import Entity
 from gravity import Gravity
-from character import Character
+from player import Player
 from floor import Floor
 from enemy import Enemy
 from vector import Vector
-#from gun import Gun
 
 # dimensions of canvas
 canvas_width = 1920
@@ -14,13 +14,11 @@ canvas_height = 1080
 floor = Floor((0, canvas_height-90), (canvas_width-1, canvas_height-90), 90, "Grey")
 
 # creating character
-character = Character(floor, img_url="images/character_img.png", img_dest_dim=(60,60), position=Vector(500, 200))
+player = Player(floor, img_url="images/player.png", img_dest_dim=(60,60), position=Vector(500, 200))
 
 enemy = Enemy(floor, canvas_width, img_url="images/npc.png", img_dest_dim=(60,60))
 
-#pistol = Gun()
-
-all_entities = [character, floor, enemy]
+all_entities = [player, floor, enemy]
 
 gravity = Gravity(all_entities)
 
@@ -39,10 +37,11 @@ def draw(canvas: simplegui.Canvas):
     for i in range(canvas_height):
         if i % 60 == 0: canvas.draw_line((0, i), (canvas_width, i), 2, 'black')
 
+
 # setting handlers
 frame.set_draw_handler(draw)
-frame.set_keydown_handler(character.key_down)
-frame.set_keyup_handler(character.key_up)
+frame.set_keydown_handler(player.key_down)
+frame.set_keyup_handler(player.key_up)
 
 #frame.set_mousedrag_handler(pistol.point_to_mouse)
 
