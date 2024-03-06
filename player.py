@@ -2,6 +2,7 @@ import SimpleGUICS2Pygame.simpleguics2pygame as simplegui
 from vector import Vector
 from entity import Entity
 
+
 class Character(Entity):
     def __init__(self, floor, **kwargs):
         super().__init__(**kwargs)
