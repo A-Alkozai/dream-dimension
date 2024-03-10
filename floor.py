@@ -5,7 +5,7 @@ from entity import Entity
 
 class Floor(Entity):
     def __init__(self, start, end, border, colour):
-        super().__init__()
+        # super().__init__()
 
         self.start = Vector(start[0], start[1])
         self.end = Vector(end[0], end[1])

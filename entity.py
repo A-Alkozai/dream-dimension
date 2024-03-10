@@ -2,15 +2,17 @@
 import SimpleGUICS2Pygame.simpleguics2pygame as simplegui
 from vector import Vector
 
+
 class Entity:
     def __init__(self, 
-                 position=Vector(), 
+                 position=Vector(),
                  velocity=Vector(),
-                 rotation=0, 
+                 rotation=0,
                  img_url="", 
                  img_dest_dim=None,
-                 gravity_strength=2, 
-                 gravity_toggle=False):
+                 row=1,
+                 column=1,
+                 frames=1):
 
         self.position = position
         self.velocity = velocity
@@ -18,20 +20,39 @@ class Entity:
 
         self.img_url = img_url
 
-        if img_url is None: self.img = simplegui._load_local_image("images/placeholder.jpg")
-        else: self.img = simplegui._load_local_image(self.img_url)
+        if img_url is None:
+            self.img = simplegui._load_local_image("images/placeholder.jpg")
+        else:
+            self.img = simplegui._load_local_image(img_url)
 
-        self.img_centre = (self.img.get_width() / 2, self.img.get_height() / 2)
         self.img_dim = (self.img.get_width(), self.img.get_height())
         self.img_dest_dim = self.img_dim if img_dest_dim is None else img_dest_dim
 
-        self.weight = gravity_strength
-        # perhaps change the name to is_affected_by_gravity ?
-        self.gravity = gravity_toggle
-        
-    def load_image(self):
-        pass
+        self.row = row
+        self.column = column
+        self.totalFrames = frames
+        self.frame_count = 0
+        self.frame_width = self.img.get_width()/column
+        self.frame_height = self.img.get_height()/row
+        self.img_dim = (self.frame_width, self.frame_height)
+
+        self.frame_centre_x = self.frame_width/2
+        self.frame_centre_y = self.frame_height/2
+        self.frame_index = [0, 0]
 
     def draw(self, canvas):
-        pass
-    def update(self): pass
+        frame_centre = (self.frame_width * self.frame_index[0] + self.frame_centre_x,
+                        self.frame_height * self.frame_index[1] + self.frame_centre_y)
+
+        canvas.draw_image(self.img,
+                          frame_centre,
+                          self.img_dim,
+                          self.position.get_p(),
+                          self.img_dest_dim,
+                          self.rotation)
+        # self.update()
+
+    def update(self):
+        self.frame_index[0] = (self.frame_index[0] + 1) % self.column
+        if self.frame_index[0] == 0:
+            self.frame_index[1] = (self.frame_index[1] + 1) % self.row
