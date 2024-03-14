@@ -17,7 +17,7 @@ player = Player(walk=8, jump=2, attack=4, dmg=2, img_url="images/player.png",
                 img_dest_dim=(60,60), position=Vector(500, 200), row=12, column=8)
 
 enemy = Enemy(player=player, walk=3, jump=2, attack=3, dmg=2, speed=0.8,
-              img_url="images/orc_spearman.png", img_dest_dim=(60,60), row=5, column=3)
+              img_url="images/orc_spearman.png", img_dest_dim=(60,60), row=7, column=4)
 
 map = Map()
 
@@ -28,7 +28,6 @@ frame = simplegui.create_frame("Stick man", canvas_width, canvas_height, 0)
 frame.set_canvas_background("White")
 
 def draw(canvas: simplegui.Canvas):
-    # gravity.gravity()
     for entity in all_entities:
         entity.draw(canvas)
 
