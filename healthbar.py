@@ -57,7 +57,7 @@ def reduce_health():
 def suicide():
     global health_bar, num_hearts
     # Set health to 0
-    health_bar.update(0)
+
     # Remove one heart
     num_hearts -= 1
     # Placeholder for game restart or other actions

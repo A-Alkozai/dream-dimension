@@ -1,7 +1,6 @@
 from vector import Vector
 from entity import Entity
 
-
 class State(Entity):
     def __init__(self, walk, jump, attack, dmg,
                  gravity_strength=2, player=None, speed=1, **kwargs):
@@ -23,6 +22,7 @@ class State(Entity):
         self.weight = gravity_strength
         self.player = player
         self.speed = speed
+
         super().__init__(**kwargs)
 
     def draw(self, canvas):
