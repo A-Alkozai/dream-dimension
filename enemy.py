@@ -2,18 +2,24 @@ import SimpleGUICS2Pygame.simpleguics2pygame as simplegui
 from player import Player
 from vector import Vector
 from state import State
-
-
 import math 
+import random
 
 class Enemy(State):
     def __init__(self, canvas_width, welcome_screen, **kwargs):
         super().__init__(welcome_screen,**kwargs)
-        self.welcome_screen = welcome_screen
 
-        self.position = Vector(50, 600)
+        self.welcome_screen = welcome_screen
+        self.position = kwargs.get('position', None)
+        if self.position is None:
+            # If position is not provided, randomly select a position within a range
+            self.position = Vector(random.randint(100, 1500), random.randint(100, 800))
         self.velocity = Vector(0, 0)
         self.canvas_width = canvas_width
+        self.move_right = True
+        self.move_distance = 100
+        self.current_distance = 0
+
     def movement(self):
         if self.JUMP:
             self.velocity += Vector(0, -5) * self.speed
@@ -51,7 +57,7 @@ class Enemy(State):
                 self.track_player()
 
         else:
-             self.move_horizontally()
+             self.move_back_and_forth()
 
         if abs(self.player.position.x - self.position.x)<25 and self.player.position.y > 800:
             self.ATTACK = True
@@ -68,25 +74,20 @@ class Enemy(State):
 
         self.speed = 0.3
 
-    def move_horizontally(self):
-         self.RIGHT = True
-         self.LEFT = False
-         self.speed = 0.2
+    def move_back_and_forth(self):
+        if self.move_right:
+            self.RIGHT = True
+            self.LEFT = False
+            self.current_distance += abs(self.velocity.x)  # Update current distance moved
+            if self.current_distance >= self.move_distance:
+                self.move_right = False  # Change direction when reached move distance
+                self.current_distance = 0  # Reset current distance
+        else:
+            self.RIGHT = False
+            self.LEFT = True
+            self.current_distance += abs(self.velocity.x)  # Update current distance moved
+            if self.current_distance >= self.move_distance:
+                self.move_right = True  # Change direction when reached move distance
+                self.current_distance = 0  # Reset current distance
+        self.speed = 0.2
 
-#def movement(self):
- #   if self.JUMP:
-  #      self.velocity += Vector(0, -5) * self.speed
-   # elif self.GRAVITY:
-    #    self.velocity.y += self.weight
-
-    # Check if not at the boundary before updating velocity
-#    if not (self.position.x >= self.canvas_width or self.position.x <= 0):
- #       if self.RIGHT:
-  #          self.velocity += Vector(1, 0) * self.speed
-   #         self.idle_frame = [0, 0]
-    #    elif self.LEFT:
-     #       self.velocity += Vector(-1, 0) * self.speed
-      #      self.idle_frame = [2, 0]
-
-    # Update position based on velocity
-    #self.position += self.velocity
