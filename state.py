@@ -3,9 +3,9 @@ from vector import Vector
 from entity import Entity
 
 class State(Entity):
-    def __init__(self, walk, jump, attack, dmg,
+    def __init__(self,welcome_screen, walk, jump, attack, dmg,
                  gravity_strength=1.5, player=None, speed=1, **kwargs):
-
+        self.welcome_screen = welcome_screen
         # different states
         self.GRAVITY = True
         self.IDLE = True
@@ -80,6 +80,7 @@ class State(Entity):
             self.velocity += Vector(0, -5) * self.speed
         elif self.GRAVITY:
             self.velocity.y += self.weight
+
         if self.RIGHT:
             self.velocity += Vector(1, 0) * self.speed
             self.idle_frame = [0, 0]

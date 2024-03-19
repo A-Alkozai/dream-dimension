@@ -3,9 +3,9 @@ from vector import Vector
 from state import State
 
 class Player(State):
-    def __init__(self, **kwargs):
-        super().__init__(**kwargs)
-
+    def __init__(self,welcome_screen, **kwargs):
+        super().__init__(welcome_screen,**kwargs)
+        self.welcome_screen = welcome_screen
     def state_update(self):
         pass
 
