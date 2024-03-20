@@ -1,11 +1,43 @@
 import SimpleGUICS2Pygame.simpleguics2pygame as simplegui
 
+class Button:
+    def __init__(self, label, pos, width, height, action):
+        self.label = label
+        self.pos = pos
+        self.width = width
+        self.height = height
+        self.action = action
+
+    def draw(self, canvas):
+        label_width = len(self.label) * 12
+        label_height = 24
+        canvas.draw_text(self.label, (self.pos[0] - label_width / 2, self.pos[1] + label_height / 4), 24, "White")
+        canvas.draw_polygon([(self.pos[0] - self.width / 2, self.pos[1] - self.height / 2),
+                             (self.pos[0] + self.width / 2, self.pos[1] - self.height / 2),
+                             (self.pos[0] + self.width / 2, self.pos[1] + self.height / 2),
+                             (self.pos[0] - self.width / 2, self.pos[1] + self.height / 2)], 1, "White")
+
+    def contains_point(self, pos):
+        x_in_range = pos[0] >= self.pos[0] - self.width / 2 and pos[0] <= self.pos[0] + self.width / 2
+        y_in_range = pos[1] >= self.pos[1] - self.height / 2 and pos[1] <= self.pos[1] + self.height / 2
+        return x_in_range and y_in_range
+
 class WelcomeScreen:
     def __init__(self, canvas_width, canvas_height):
         self.canvas_width = canvas_width
         self.canvas_height = canvas_height
         self.show_welcome_screen = True
-        self.click_to_start = True
+        
+        # Define button dimensions and positions
+        button_width = 200
+        button_height = 50
+        button_margin = 20
+        button_x = canvas_width / 2
+        play_button_y = canvas_height * 3 / 4 - button_height - button_margin
+        highscores_button_y = canvas_height * 3 / 4 + button_margin
+
+        self.play_button = Button("Play/Start", (button_x, play_button_y), button_width, button_height, self.start_game)
+        self.highscores_button = Button("Highscores", (button_x, highscores_button_y), button_width, button_height, self.show_highscores)
 
     def draw(self, canvas):
         if self.show_welcome_screen:
@@ -39,17 +71,21 @@ class WelcomeScreen:
             for i, sentence in enumerate(description_sentences):
                 canvas.draw_text(sentence, [(self.canvas_width - len(sentence) * 6) / 2, 220 + i * 30], 18, welcome_color, "sans-serif")
 
-            # Draw click to start text
-            if self.click_to_start:
-                click_to_start_text = "Click to Start"
-                canvas.draw_text(click_to_start_text, [(self.canvas_width - len(click_to_start_text) * 9) / 2, 220 + len(description_sentences) * 30], 24, welcome_color, "sans-serif")
+            # Draw buttons
+            self.play_button.draw(canvas)
+            self.highscores_button.draw(canvas)
 
     def start_game(self):
         self.show_welcome_screen = False
 
+    def show_highscores(self):
+        # Code to display highscores
+        pass
+
     def reset_game(self):
         self.show_welcome_screen = True
         # Reset lives and score here
+
 
 
 
