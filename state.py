@@ -3,9 +3,9 @@ from vector import Vector
 from entity import Entity
 
 class State(Entity):
-    def __init__(self,welcome_screen, walk, jump, attack, dmg,
+    def __init__(self, walk, jump, attack, dmg,
                  gravity_strength=1.5, player=None, speed=1, **kwargs):
-        self.welcome_screen = welcome_screen
+
         # different states
         self.GRAVITY = True
         self.IDLE = True

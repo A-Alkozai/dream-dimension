@@ -1,4 +1,5 @@
 import SimpleGUICS2Pygame.simpleguics2pygame as simplegui
+from highscore_screen import HighscoreScreen
 
 class Button:
     def __init__(self, label, pos, width, height, action):
@@ -7,7 +8,7 @@ class Button:
         self.width = width
         self.height = height
         self.action = action
-
+        
     def draw(self, canvas):
         label_width = len(self.label) * 12
         label_height = 24
@@ -23,10 +24,13 @@ class Button:
         return x_in_range and y_in_range
 
 class WelcomeScreen:
-    def __init__(self, canvas_width, canvas_height):
+    def __init__(self, canvas_width, canvas_height, player):
         self.canvas_width = canvas_width
         self.canvas_height = canvas_height
         self.show_welcome_screen = True
+        self.player = player
+        self.highscores_shown = False
+        self.highscore_screen = HighscoreScreen(canvas_width, canvas_height, [], self)  # Initialize HighscoreScreen
         
         # Define button dimensions and positions
         button_width = 200
@@ -75,16 +79,25 @@ class WelcomeScreen:
             self.play_button.draw(canvas)
             self.highscores_button.draw(canvas)
 
+        elif self.highscores_shown:
+            self.highscore_screen.draw(canvas)  # Draw HighscoreScreen if highscores are shown
+
     def start_game(self):
         self.show_welcome_screen = False
 
     def show_highscores(self):
-        # Code to display highscores
-        pass
+        self.show_welcome_screen = False
+        self.highscores_shown = True
+        self.highscore_screen.show_highscores([("Player", self.player.points)])  # Pass player's name and points
+
+    def hide_highscores(self):
+        self.highscores_shown = False
 
     def reset_game(self):
         self.show_welcome_screen = True
         # Reset lives and score here
+
+
 
 
 

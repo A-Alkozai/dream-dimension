@@ -6,11 +6,10 @@ import math
 import random
 
 class Enemy(State):
-    def __init__(self, range, canvas_width, welcome_screen, **kwargs):
-        super().__init__(welcome_screen,**kwargs)
+    def __init__(self, range, canvas_width, **kwargs):
+        super().__init__(**kwargs)
 
         self.range = range
-        self.welcome_screen = welcome_screen
         self.position = kwargs.get('position', None)
         if self.position is None:
             # If position is not provided, randomly select a position within a range
