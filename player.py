@@ -4,9 +4,9 @@ from state import State
 
 class Player(State):
     def __init__(self, **kwargs):
-        
         super().__init__(**kwargs)
         self.points = 0
+        self.lives = 3  # Initialize lives(we can change this value if need be)
 
     def state_update(self):
         pass
