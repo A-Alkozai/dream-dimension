@@ -4,8 +4,9 @@ from entity import Entity
 import json
 
 class Map():
-    def __init__(self, **kwargs):
+    def __init__(self,welcome_screen, **kwargs):
         super().__init__(**kwargs)
+        self.welcome_screen = welcome_screen
         
         self.tile_size = 60
 

@@ -3,8 +3,7 @@ from vector import Vector
 from entity import Entity
 
 class State(Entity):
-    def __init__(self, walk, jump, attack, dmg,
-                 gravity_strength=1.5, player=None, speed=1, **kwargs):
+    def __init__(self, walk, jump, attack, dmg, health=100, gravity_strength=1.5, player=None, speed=1, **kwargs):
 
         # different states
         self.GRAVITY = True
@@ -29,6 +28,9 @@ class State(Entity):
         self.player = player
         self.speed = speed
 
+        # Health attribute
+        self.health = health
+
         super().__init__(**kwargs)
 
     def draw(self, canvas):
@@ -45,16 +47,16 @@ class State(Entity):
 
     def state_update(self):
         # If enemy is far from player, move towards player position
-        if self.player.position.x-25 > self.position.x:
+        if self.player.position.x - 25 > self.position.x:
             self.RIGHT = True
             self.LEFT = False
             self.ATTACK = False
-        elif self.player.position.x+25 < self.position.x:
+        elif self.player.position.x + 25 < self.position.x:
             self.LEFT = True
             self.RIGHT = False
             self.ATTACK = False
         # If enemy is close to player, enemy attacks
-        elif self.player.position.x+25 > self.position.x or self.player.position.x-25 < self.position.x:
+        elif self.player.position.x + 25 > self.position.x or self.player.position.x - 25 < self.position.x:
             self.LEFT = False
             self.RIGHT = False
             self.ATTACK = True
@@ -80,6 +82,7 @@ class State(Entity):
             self.velocity += Vector(0, -5) * self.speed
         elif self.GRAVITY:
             self.velocity.y += self.weight
+
         if self.RIGHT:
             self.velocity += Vector(1, 0) * self.speed
             self.idle_frame = [0, 0]
@@ -180,16 +183,4 @@ class State(Entity):
             # Choosing correct row
             self.frame_index[1] = 2
             if self.frame_index[0] >= self.walk_frame:
-                self.frame_index[0] = 0
-
-            # Control FPS
-            if self.frame_count % self.walk_frame == 0:
-                self.frame_index[0] = (self.frame_index[0] + 1) % self.walk_frame
-
-        else:
-            # Set idle frame
-            self.frame_index[0] = self.idle_frame[0]
-            self.frame_index[1] = self.idle_frame[1]
-        self.frame_count += 1
-
-
+                self.frame
