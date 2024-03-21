@@ -5,9 +5,9 @@ from state import State
 
 
 class Enemy(State):
-    def __init__(self, **kwargs):
+    def __init__(self, position=Vector(50, 600), **kwargs):
         super().__init__(**kwargs)
 
-        self.position = Vector(50, 600)
+        self.position = position
         self.velocity = Vector(0, 0)
 

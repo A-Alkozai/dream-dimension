@@ -1,6 +1,5 @@
 import SimpleGUICS2Pygame.simpleguics2pygame as simplegui
 from player import Player
-from floor import Floor
 from enemy import Enemy
 from vector import Vector
 from map import Map
@@ -9,19 +8,20 @@ from map import Map
 canvas_width = 1920
 canvas_height = 1080
 
-# creating floor, player, enemy
-#floor = Floor((0, canvas_height-90), (canvas_width-1, canvas_height-90), 90, "Grey")
-
-
+# creating player and enemies
 player = Player(walk=8, jump=2, attack=4, dmg=2, img_url="images/player.png",
                 img_dest_dim=(60,60), position=Vector(500, 200), row=12, column=8)
 
-enemy = Enemy(player=player, walk=3, jump=2, attack=3, dmg=2, speed=0.8,
+orc_spear = Enemy(player=player, walk=4, jump=2, attack=3, dmg=2, speed=0.8,
               img_url="images/orc_spearman.png", img_dest_dim=(60,60), row=7, column=4)
+
+orc_hunter = Enemy(player=player, walk=8, jump=2, attack=4, dmg=2, speed=0.3,
+                   img_url="images/orc_hunter_mask_spritesheet.png", img_dest_dim=(50,60),
+                   position=Vector(700, 300), row=7, column=8)
 
 map = Map()
 
-all_entities = [player, enemy, map]
+all_entities = [player, orc_spear, map, orc_hunter]
 
 # creation of canvas
 frame = simplegui.create_frame("Stick man", canvas_width, canvas_height, 0)
