@@ -27,6 +27,9 @@ class State(Entity):
         self.DIE = False
         self.DEAD = False
 
+        # ladders
+        self.CLIMBING = False
+
         # patrol conditions
         self.patrol_right = True
         self.patrolled_distance = 0
@@ -68,7 +71,7 @@ class State(Entity):
         super().__init__(name, **kwargs)
 
     def state_update(self):
-        print(self.grounded)
+        print(self.CLIMBING)
         if self.damaged > 0:
             self.HURT = True
             self.health -= self.damaged
@@ -106,6 +109,8 @@ class State(Entity):
 
         if self.JUMP and self.in_jump:
             self.velocity += Vector(0, -5) * self.speed
+        elif self.CLIMBING:
+            self.velocity.y += Vector(0, -5) * self.speed
         elif self.GRAVITY:
             self.velocity.y += self.weight
 

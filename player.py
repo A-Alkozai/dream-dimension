@@ -9,10 +9,12 @@ class Player(State):
         super().__init__(name, **kwargs)
 
         self.name = name
+        self.collision_mask = ['ladder']
         # Lives & Score tracker
         self.points = 0
         self.lives = 3
         self.grounded = False
+        self.on_ladder = False
 
 
     def key_down(self, key):
@@ -29,12 +31,18 @@ class Player(State):
             self.ATTACK2 = True
         if key == simplegui.KEY_MAP["c"]:
             self.HURT = True
+        
+        if key == simplegui.KEY_MAP['w'] and self.on_ladder:
+            self.CLIMBING = True
 
     def key_up(self, key):
         if key == simplegui.KEY_MAP["a"]:
             self.LEFT = False
         if key == simplegui.KEY_MAP["d"]:
             self.RIGHT = False
+
+        if key == simplegui.KEY_MAP['w']:
+            self.CLIMBING = False
 
     def shoot(self):
         if self.mana >= 40:

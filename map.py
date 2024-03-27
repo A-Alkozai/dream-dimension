@@ -20,38 +20,29 @@ class Map():
 
         for i, row in enumerate(self.map_data):
             for j, cell in enumerate(row):
-                if cell == '': continue
+                if cell == ' ': continue
 
+                match cell:
+                    case 'f': entity_name = 'block'
+                    case 'l': entity_name = 'ladder'
+                
                 block_entity = Entity(
-                    'block',
+                    entity_name,
                     Vector(
                       self.tile_size * j + self.tile_size / 2,
                       self.tile_size * i + self.tile_size / 2
                     ),
-                    img_url=self.get_map_tile(cell),
+                    img_url=self.get_tile_image(cell),
                     img_dest_dim=(60,60)
                 )
 
-
                 self.game_manager.add_entity(block_entity)
-                # print('spawnde blocik')
 
-                # tile_image = simplegui._load_local_image(self.get_map_tile(column))
-
-                # # calculate tile centre
-                # tile_pos = (
-                #     self.tile_size * j + self.tile_size / 2,
-                #     self.tile_size * i + self.tile_size / 2
-                # )
-                # # add tile position to set
-                # if column != '':
-                #     self.tiles.add(tile_pos)
-
-                # canvas.draw_image(tile_image, (8,8), (16,16), tile_pos, (self.tile_size, self.tile_size))
-
-    def get_map_tile(self, char) -> str:
+    def get_tile_image(self, char) -> str:
         match char:
             case 'f':
                 return 'images/stone.png'
+            case 'l':
+                return 'images/ladder.png'
 
-        return ''
+        return ' '

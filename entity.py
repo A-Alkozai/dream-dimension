@@ -14,10 +14,14 @@ class Entity:
                  row=1,
                  column=1,
                  frames=1,
-                 gamestate=None):
+                 gamestate=None,
+                 collision_mask=[]
+                 ):
         
         self.game_manager = gamestate
         self.name = name
+        self.collision_mask = collision_mask
+
         self.position = position
         self.velocity = velocity
         self.rotation = rotation
