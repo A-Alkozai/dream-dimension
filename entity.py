@@ -2,7 +2,6 @@
 import SimpleGUICS2Pygame.simpleguics2pygame as simplegui
 from vector import Vector
 
-
 class Entity:
     def __init__(self, 
                  name,
@@ -25,6 +24,10 @@ class Entity:
         self.position = position
         self.velocity = velocity
         self.rotation = rotation
+
+        self.health = 3
+
+        self.active = True
 
         self.img_url = img_url
 
@@ -49,6 +52,8 @@ class Entity:
         self.frame_index = [0, 0]
 
     def draw(self, canvas):
+        if not self.active: return
+
         frame_centre = (self.frame_width * self.frame_index[0] + self.frame_centre_x,
                         self.frame_height * self.frame_index[1] + self.frame_centre_y)
 
@@ -63,3 +68,6 @@ class Entity:
         self.frame_index[0] = (self.frame_index[0] + 1) % self.column
         if self.frame_index[0] == 0:
             self.frame_index[1] = (self.frame_index[1] + 1) % self.row
+    
+    def on_collision(self, collider):
+        pass

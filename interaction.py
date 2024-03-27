@@ -10,67 +10,76 @@ class Interaction:
 
             for entity2 in all_entities:
                 if entity == entity2: continue
-                # if entity2.name in entity.collision_mask: continue
                 # calculate collision
                 self.calculate_collisions(entity, entity2)
     
-    # def is_overlapping(self, entity, collider):
-    #     return True if collider. entity.position.x
+    def is_overlapping(self, entity, collider):
+        collider_edges = self.get_collider_edges(collider)
+        is_overlapping = collider_edges['left'] < entity.position.x < collider_edges['right'] and collider_edges['top'] < entity.position.y < collider_edges['bottom']
+        # print(is_overlapping)
+        return is_overlapping
 
-    def calculate_collisions(self, entity, collider):
-        #  distance from centre of an entity to the edge
-        entity_radius = 30
-
+    def is_colliding(self, entity, collider):
+         #  distance from centre of an entity to the edge
         # collider edges
-        collider_top_edge = collider.position.y - entity_radius
-        collider_bottom_edge = collider.position.y + entity_radius
-        collider_left_edge = collider.position.x - entity_radius
-        collider_right_edge = collider.position.x + entity_radius
+        collider_edges = self.get_collider_edges(collider)
 
         # entity edges
-        entity_top_edge = entity.position.y - entity_radius
-        entity_bottom_edge = entity.position.y + entity_radius
-        entity_left_edge = entity.position.x - entity_radius
-        entity_right_edge = entity.position.x + entity_radius
+        entity_edges = self.get_collider_edges(entity)
 
         in_collision = False
         collision_direction = ''
         
         #top
-        if collider_left_edge <= entity.position.x <= collider_right_edge:
+        if collider_edges['left'] <= entity.position.x <= collider_edges['right']:
             # top
-            if collider_top_edge <= entity_bottom_edge <= collider.position.y:
+            if collider_edges['top'] <= entity_edges['bottom'] <= collider.position.y:
                 in_collision = True
                 collision_direction = 'top'
                 
             # bottom
-            if collider_bottom_edge >= entity_top_edge >= collider.position.y:
+            if collider_edges['bottom'] >= entity_edges['top'] >= collider.position.y:
                 in_collision = True
                 collision_direction = 'bottom'
 
-        if collider_top_edge <= entity.position.y <= collider_bottom_edge:
+        if collider_edges['top'] <= entity.position.y <= collider_edges['bottom']:
             # left
-            if collider_left_edge <= entity_right_edge <= collider.position.x:
+            if collider_edges['left'] <= entity_edges['right'] <= collider.position.x:
                 in_collision = True
                 collision_direction = 'left'
     
             # right
-            if collider_right_edge >= entity_left_edge >= collider.position.x:
+            if collider_edges['right'] >= entity_edges['left'] >= collider.position.x:
                 in_collision = True
                 collision_direction = 'right'
 
+        return in_collision, collision_direction
+    
+    def get_collider_edges(self, entity):
+        entity_radius = 30
+        collider_top_edge = entity.position.y - entity_radius
+        collider_bottom_edge = entity.position.y + entity_radius
+        collider_left_edge = entity.position.x - entity_radius
+        collider_right_edge = entity.position.x + entity_radius
+
+        return {
+            'top': collider_top_edge,
+            'bottom': collider_bottom_edge,
+            'left': collider_left_edge,
+            'right': collider_right_edge,
+        }
+
+    def calculate_collisions(self, entity, collider):
+        entity_radius = 30
+        collider_edges = self.get_collider_edges(collider)
+        in_collision, collision_direction = self.is_colliding(entity, collider)
 
         if collider.name not in entity.collision_mask:
             match collision_direction:
-                case 'top': entity.position.y = collider_top_edge - entity_radius
-                case 'bottom': entity.position.y = collider_bottom_edge + entity_radius
-                case 'left': entity.position.x = collider_left_edge - entity_radius
-                case 'right': entity.position.x = collider_right_edge + entity_radius
-
-        if in_collision:                
-            # set player grounded variable
-            entity.grounded = True if entity.name == 'player' else False
-            entity.on_ladder = True if entity.name == 'player' and collider.name == 'ladder' else False
-            if entity.name == 'player': print(entity.on_ladder)
-                             
+                case 'top': entity.position.y = collider_edges['top'] - entity_radius
+                case 'bottom': entity.position.y = collider_edges['bottom'] + entity_radius
+                case 'left': entity.position.x = collider_edges['left'] - entity_radius
+                case 'right': entity.position.x = collider_edges['right'] + entity_radius
     
+# AFK ZONE:
+# >>  <<

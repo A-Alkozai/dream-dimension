@@ -13,7 +13,7 @@ class GameState:
 
         self.all_entities = []
 
-        self.interactionManager = Interaction()
+        self.interaction_manager = Interaction()
         
         map = Map(self)
         map.load()
@@ -34,9 +34,9 @@ class GameState:
                     position=Vector(1000, 100), row=7, column=8, gamestate=self)
 
         self.all_entities.append(self.player)
-        # self.all_entities.append(self.enemy1)
-        # self.all_entities.append(self.enemy2)
-        # self.all_entities.append(self.enemy3)
+        self.all_entities.append(self.enemy1)
+        self.all_entities.append(self.enemy2)
+        self.all_entities.append(self.enemy3)
     
     def add_entity(self, entity):
         self.all_entities.append(entity)
@@ -49,4 +49,4 @@ class GameState:
             entity.update()
             entity.draw(canvas)
 
-        self.interactionManager.calculate_all_collisions(self.all_entities)
+        self.interaction_manager.calculate_all_collisions(self.all_entities)

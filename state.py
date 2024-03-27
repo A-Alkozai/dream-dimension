@@ -28,7 +28,7 @@ class State(Entity):
         self.DEAD = False
 
         # ladders
-        self.CLIMBING = False
+        self.CLIMB = False
 
         # patrol conditions
         self.patrol_right = True
@@ -71,7 +71,7 @@ class State(Entity):
         super().__init__(name, **kwargs)
 
     def state_update(self):
-        print(self.CLIMBING)
+        # print(self.CLIMBING)
         if self.damaged > 0:
             self.HURT = True
             self.health -= self.damaged
@@ -90,28 +90,50 @@ class State(Entity):
 
     def movement(self):
         speed = self.speed
-        # If jumping, then no gravity occurs (vice versa)
 
-        # self.JUMP = true only if self.grounded and 'spacebar'
-        # Jump movement only if self.in_jump = true
-        # Whilst in Jump movement, self.grounded = False
+
+        # self.CLIMB = true only if self.on_ladder and 'w'
+        # climb movement only if self.in_climb = true
+        # Whilst in climb movement, self.on_ladder = False
 
 
         # Simulation
 
-        # Jump whilst grounded 
-        # self.JUMP = true 
-        # in_jump = true
-        # Jump movement
-        # grounded = False -> Cannot jump anymore
+        # On ladder 
+        # self.CLIMB = true 
+        # in_climb = true
+        # Climb movement
+        # on_ladder = False -> Cannot climb anymore
         # 
-        
 
-        if self.JUMP and self.in_jump:
-            self.velocity += Vector(0, -5) * self.speed
-        elif self.CLIMBING:
-            self.velocity.y += Vector(0, -5) * self.speed
-        elif self.GRAVITY:
+        if self.CLIMB:
+            # check if still on ladder
+            # aka update on_ladder
+            ladders = [entity for entity in self.game_manager.all_entities if entity.name == 'ladder']
+
+            for ladder in ladders:
+                if self.game_manager.interaction_manager.is_overlapping(self, ladder):
+                    self.on_ladder = True
+                    break
+                else:
+                    self.on_ladder = False
+            if self.on_ladder:
+                self.velocity.y += (Vector(0, -3) * self.speed).y
+            
+            
+            #         for ladder in ladders:
+            # if self.game_manager.interaction_manager.is_overlapping(self, ladder):
+            #     self.on_ladder = True
+            #     break
+            # else:
+            #     self.CLIMB = False
+
+            #     self.on_ladder = False
+            
+            
+        elif self.JUMP and self.in_jump:
+            self.velocity += Vector(0, -6) * self.speed
+        if self.GRAVITY:
             self.velocity.y += self.weight
 
         # Patrol movements

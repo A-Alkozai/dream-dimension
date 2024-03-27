@@ -3,19 +3,42 @@ from vector import Vector
 from state import State
 from projectile import Projectile
 
-
 class Player(State):
     def __init__(self,name, **kwargs):
         super().__init__(name, **kwargs)
 
         self.name = name
-        self.collision_mask = ['ladder']
+        self.collision_mask = ['ladder', 'player_projectile', 'enemy', 'enemy_projectile']
         # Lives & Score tracker
         self.points = 0
         self.lives = 3
+
         self.grounded = False
         self.on_ladder = False
 
+    def update(self):
+        super().update()
+
+        ground_blocks = [entity for entity in self.game_manager.all_entities if entity.name == 'block']
+        ladders = [entity for entity in self.game_manager.all_entities if entity.name == 'ladder']
+
+        # if self.game_manager.interaction_manager.in_collision(self, ground_blocks):                
+        #     # set player grounded variable
+        #     self.grounded = True
+        for block in ground_blocks:
+            if self.game_manager.interaction_manager.is_colliding(self, block)[0]:
+                self.grounded = True
+
+        # # check if we are on top of a ladder
+        # for ladder in ladders:
+        #     if self.game_manager.interaction_manager.is_overlapping(self, ladder):
+        #         self.on_ladder = True
+        #         break
+        #     else:
+        #         self.CLIMB = False
+
+        #         self.on_ladder = False
+            
 
     def key_down(self, key):
         if key == simplegui.KEY_MAP["space"] and self.grounded:
@@ -32,8 +55,8 @@ class Player(State):
         if key == simplegui.KEY_MAP["c"]:
             self.HURT = True
         
-        if key == simplegui.KEY_MAP['w'] and self.on_ladder:
-            self.CLIMBING = True
+        if key == simplegui.KEY_MAP['w']:
+            self.CLIMB = True
 
     def key_up(self, key):
         if key == simplegui.KEY_MAP["a"]:
@@ -42,7 +65,8 @@ class Player(State):
             self.RIGHT = False
 
         if key == simplegui.KEY_MAP['w']:
-            self.CLIMBING = False
+            self.CLIMB = False
+            self.on_ladder = False
 
     def shoot(self):
         if self.mana >= 40:
@@ -56,6 +80,6 @@ class Player(State):
                 adjust_x = -10
             self.projectile = Projectile('player_projectile', img_url="images/magic_shot.png", img_dest_dim=(60, 60),
                                          position=Vector(self.position.x + adjust_x, self.position.y), row=2, column=15,
-                                         speed=1.2)
+                                         speed=1.2, collision_mask=['ladder', 'player_projectile', 'player', 'enemy', 'enemy_projectile'])
             self.projectile.is_right = move_right
             self.game_manager.add_entity(self.projectile)
