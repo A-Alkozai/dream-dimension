@@ -3,7 +3,7 @@ from player import Player
 from vector import Vector
 
 from enemy import Enemy
-from map import Map
+from map import MapManager
 from interaction import Interaction
 
 class GameState:
@@ -15,23 +15,23 @@ class GameState:
 
         self.interaction_manager = Interaction()
         
-        map = Map(self)
+        map = MapManager(self)
         map.load()
 
         # Create player
         self.player = Player('player',walk_frames=8, jump_frames=2, attack_frames=4, dmg_frames=2, img_url="images/player.png",
-                        img_dest_dim=(60, 60), position=Vector(500, 700), row=13, column=8, gamestate=self)
+                        img_dest_dim=(60, 60), position=Vector(500, 700), row=13, column=8, game_manager=self)
 
         # Create enemies
         self.enemy1 = Enemy('enemy', is_ranged=False, player=self.player, walk_frames=3, jump_frames=2, attack_frames=3,
                     dmg_frames=2, speed=0.6, img_url="images/orc_warrior.png", img_dest_dim=(60, 60),
-                    position=Vector(100, 100), row=7, column=4, gamestate=self)
+                    position=Vector(100, 100), row=7, column=4, game_manager=self)
         self.enemy2 = Enemy('enemy', is_ranged=True, player=self.player, walk_frames=3, jump_frames=2, attack_frames=4,
                     dmg_frames=2, speed=0.4, img_url="images/orc_hunter.png", img_dest_dim=(60, 60),
-                    position=Vector(900, 100), row=7, column=8, gamestate=self)
+                    position=Vector(900, 100), row=7, column=8, game_manager=self)
         self.enemy3 = Enemy('enemy', is_ranged=True, player=self.player, walk_frames=3, jump_frames=2, attack_frames=4,
                     dmg_frames=2, speed=0.4, img_url="images/orc_shaman.png", img_dest_dim=(60, 60),
-                    position=Vector(1000, 100), row=7, column=8, gamestate=self)
+                    position=Vector(1000, 100), row=7, column=8, game_manager=self)
 
         self.all_entities.append(self.player)
         self.all_entities.append(self.enemy1)

@@ -70,7 +70,8 @@ class Enemy(State):
                 adjust_x = -10
             self.projectile = Projectile(name='enemy_projectile', img_url="images/magic_shot.png", img_dest_dim=(60, 60),
                                          position=Vector(self.position.x + adjust_x, self.position.y), row=2, column=15,
-                                         speed=1.2, collision_mask=['enemy_projectile', 'enemy', 'ladder', 'player', 'player_projectile'])
+                                         speed=1.2, collision_mask=['enemy_projectile', 'enemy', 'ladder', 'player', 'player_projectile'],
+                                         game_manager=self.game_manager)
             self.projectile.is_red = False
             self.projectile.is_friendly = False
             self.projectile.is_right = move_right

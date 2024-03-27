@@ -3,7 +3,7 @@ from vector import Vector
 from player import Player
 from enemy import Enemy
 from entity import Entity
-from map import Map
+from map import MapManager
 
 # dimensions of canvas
 canvas_width = 1920

@@ -13,11 +13,11 @@ class Entity:
                  row=1,
                  column=1,
                  frames=1,
-                 gamestate=None,
+                 game_manager=None,
                  collision_mask=[]
                  ):
         
-        self.game_manager = gamestate
+        self.game_manager = game_manager
         self.name = name
         self.collision_mask = collision_mask
 
@@ -50,6 +50,11 @@ class Entity:
         self.frame_centre_x = self.frame_width/2
         self.frame_centre_y = self.frame_height/2
         self.frame_index = [0, 0]
+
+    # def take_damage(self, amount):
+    #     self.health -= amount
+
+    #     if self.health <= 0: self.DEAD = True
 
     def draw(self, canvas):
         if not self.active: return
