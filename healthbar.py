@@ -1,12 +1,9 @@
-try:
-    import SimpleGUICS2Pygame.codeskulptor_lib as codeskulptor_lib
-    import SimpleGUICS2Pygame.simpleguics2pygame as simplegui
-except ImportError:
-    import simplegui
+import SimpleGUICS2Pygame.simpleguics2pygame as simplegui
+
 
 # Class to represent a health bar
 class HealthBar:
-    def __init__(self, max_health, position, dimensions, color):
+    def __init__(self, position, dimensions, max_health=100, color="Red"):
         # Initialize health bar attributes
         self.max_health = max_health  # Maximum health value
         self.current_health = max_health  # Current health value

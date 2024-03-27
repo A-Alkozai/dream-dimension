@@ -1,24 +1,24 @@
 import SimpleGUICS2Pygame.simpleguics2pygame as simplegui
-from player import Player
+from projectile import Projectile
 from vector import Vector
 from state import State
 import math
-import random
+
 
 class Enemy(State):
-    def __init__(self, range, canvas_width, mana_max=150, mana_recharge_rate=2, **kwargs):
+    def __init__(self, is_ranged=True, mana_max=40, mana_recharge_rate=20, **kwargs):
         super().__init__(**kwargs)
 
-        self.range = range
-        self.position = kwargs.get('position', None)
-        if self.position is None:
-            # If position is not provided, randomly select a position within a range
-            self.position = Vector(random.randint(100, 1500), random.randint(100, 800))
-        self.velocity = Vector(0, 0)
-        self.canvas_width = canvas_width
-        self.move_right = True
-        self.move_distance = 100
-        self.current_distance = 0
+        # create tracking and attack distance
+        self.is_ranged = is_ranged
+        if self.is_ranged:
+            self.tracking_range = 400
+            self.attack_range = 300
+            self.fps = 16
+        else:
+            self.tracking_range = 400
+            self.attack_range = 30
+            self.fps = 6
 
         # Mana attributes for enemy
         self.max_mana = mana_max
@@ -27,65 +27,47 @@ class Enemy(State):
         self.mana_recharge_timer = simplegui.create_timer(1000, self.recharge_mana)
 
     def state_update(self):
-        distance_to_player = math.sqrt((self.player.position.x - self.position.x) ** 2 + (self.player.position.y - self.position.y) ** 2)
+        super().state_update()
 
-        tracking_range = 200
-        attack_range = 100
+        # shortest distance
+        distance_to_player = math.sqrt((self.player.position.x - self.position.x) ** 2
+                                       + (self.player.position.y - self.position.y) ** 2)
 
-        if distance_to_player < tracking_range:
-            self.track_player()
-        else:
-            self.move_back_and_forth()
+        # If enemy close to player, attack player
+        if distance_to_player < self.attack_range:
+            self.ATTACK1 = True
+            self.PATROL = False
+            self.idle_frame = [0, 0]
+            if self.player.position.x < self.position.x:
+                self.idle_frame = [2, 0]
 
-        if self.range:
-            if distance_to_player < attack_range:
-                self.ATTACK = True
-
-                if self.player.position.x > self.position.x:
-                    self.RIGHT = True
-                    self.LEFT = False
-                else:
-                    self.LEFT = True
-                    self.RIGHT = False
-            else:
-                self.ATTACK = False
-        else:
-            if abs(self.player.position.x - self.position.x)<25 and self.player.position.y > 800:
-                self.ATTACK = True
-            else:
-                self.ATTACK = False
-
-    def track_player(self):
-        if self.player.position.x > self.position.x:
+        # If enemy is far from player, move towards player position
+        elif self.player.position.x - 25 > self.position.x and distance_to_player <= self.tracking_range:
             self.RIGHT = True
             self.LEFT = False
-        else:
+            self.PATROL = False
+        elif self.player.position.x + 25 < self.position.x and distance_to_player <= self.tracking_range:
             self.LEFT = True
             self.RIGHT = False
-        self.speed = 0.5
+            self.PATROL = False
 
-    def move_back_and_forth(self):
-        if self.move_right:
-            self.RIGHT = True
-            self.LEFT = False
-            self.current_distance += abs(self.velocity.x)  # Update current distance moved
-            if self.current_distance >= self.move_distance:
-                self.move_right = False  # Change direction when reached move distance
-                self.current_distance = 0  # Reset current distance
+        # Enemy patrol state
         else:
-            self.RIGHT = False
-            self.LEFT = True
-            self.current_distance += abs(self.velocity.x)  # Update current distance moved
-            if self.current_distance >= self.move_distance:
-                self.move_right = True  # Change direction when reached move distance
-                self.current_distance = 0  # Reset current distance
-        self.speed = 0.2
+            self.PATROL = True
 
-    def start_mana_recharge(self):
-        self.mana_recharge_timer.start()
+    def shoot(self):
+        if self.is_ranged and self.mana >= 40:
+            self.mana -= 40
+            self.start_mana_recharge()
 
-    def stop_mana_recharge(self):
-        self.mana_recharge_timer.stop()
-
-    def recharge_mana(self):
-        self.current_mana = min(self.current_mana + self.mana_recharge_rate, self.max_mana)
+            move_right = True
+            adjust_x = 10
+            if self.frame_index[1] == 6:
+                move_right = False
+                adjust_x = -10
+            self.projectile = Projectile(img_url="images/magic_shot.png", img_dest_dim=(50, 50),
+                                         position=Vector(self.position.x + adjust_x, self.position.y), row=2, column=15,
+                                         speed=1.2)
+            self.projectile.is_red = False
+            self.projectile.is_friendly = False
+            self.projectile.is_right = move_right

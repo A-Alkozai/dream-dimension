@@ -50,7 +50,6 @@ class Entity:
                           self.position.get_p(),
                           self.img_dest_dim,
                           self.rotation)
-        # self.update()
 
     def update(self):
         self.frame_index[0] = (self.frame_index[0] + 1) % self.column

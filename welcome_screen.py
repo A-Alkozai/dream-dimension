@@ -1,6 +1,7 @@
 import SimpleGUICS2Pygame.simpleguics2pygame as simplegui
 from highscore_screen import HighscoreScreen
 
+
 class Button:
     def __init__(self, label, pos, width, height, action):
         self.label = label
@@ -22,6 +23,7 @@ class Button:
         x_in_range = pos[0] >= self.pos[0] - self.width / 2 and pos[0] <= self.pos[0] + self.width / 2
         y_in_range = pos[1] >= self.pos[1] - self.height / 2 and pos[1] <= self.pos[1] + self.height / 2
         return x_in_range and y_in_range
+
 
 class WelcomeScreen:
     def __init__(self, canvas_width, canvas_height, player):
@@ -96,15 +98,3 @@ class WelcomeScreen:
     def reset_game(self):
         self.show_welcome_screen = True
         # Reset lives and score here
-
-
-
-
-
-
-
-
-
-
-
-
