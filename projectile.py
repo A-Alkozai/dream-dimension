@@ -33,7 +33,7 @@ class Projectile(State):
             self.frame_index[0] = (self.frame_index[0] + 1) % 15
         self.frame_count += 1
 
-    def direction(self, is_right):
+    def set_direction(self, is_right):
         self.RIGHT = False
         self.LEFT = True
         self.rotation = 3

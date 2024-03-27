@@ -31,7 +31,6 @@ map2 = None
 
 # Map 1 entities
 map1_enemies = [enemy1, enemy2, enemy3]
-map1_enemies = []
 map1_entities = [enemy1, enemy2, enemy3, player]
 
 # Entities that get draw
