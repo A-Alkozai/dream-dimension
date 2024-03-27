@@ -5,6 +5,7 @@ from vector import Vector
 
 class Entity:
     def __init__(self, 
+                 name,
                  position=Vector(),
                  velocity=Vector(),
                  rotation=0,
@@ -12,8 +13,11 @@ class Entity:
                  img_dest_dim=None,
                  row=1,
                  column=1,
-                 frames=1):
-
+                 frames=1,
+                 gamestate=None):
+        
+        self.game_manager = gamestate
+        self.name = name
         self.position = position
         self.velocity = velocity
         self.rotation = rotation

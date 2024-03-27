@@ -5,7 +5,7 @@ from entity import Entity
 
 
 class State(Entity):
-    def __init__(self, walk_frames=0, jump_frames=0, attack_frames=0, dmg_frames=0, health_max=100, mana_max=120,
+    def __init__(self, name, walk_frames=0, jump_frames=0, attack_frames=0, dmg_frames=0, health_max=100, mana_max=120,
                  mana_recharge_rate=5, gravity_strength=1.5, player=None, projectile=None, interaction=None, speed=1,
                  **kwargs):
 
@@ -41,6 +41,7 @@ class State(Entity):
         # default idle frame
         self.idle_frame = [0, 0]
         self.fps = 3
+        self.in_jump = False
 
         # player & projectile object
         self.player = player
@@ -64,9 +65,10 @@ class State(Entity):
         self.mana_recharge_rate = mana_recharge_rate
         self.mana_recharge_timer = simplegui.create_timer(1000, self.recharge_mana)
 
-        super().__init__(**kwargs)
+        super().__init__(name, **kwargs)
 
     def state_update(self):
+        print(self.grounded)
         if self.damaged > 0:
             self.HURT = True
             self.health -= self.damaged
@@ -86,7 +88,23 @@ class State(Entity):
     def movement(self):
         speed = self.speed
         # If jumping, then no gravity occurs (vice versa)
-        if self.JUMP:
+
+        # self.JUMP = true only if self.grounded and 'spacebar'
+        # Jump movement only if self.in_jump = true
+        # Whilst in Jump movement, self.grounded = False
+
+
+        # Simulation
+
+        # Jump whilst grounded 
+        # self.JUMP = true 
+        # in_jump = true
+        # Jump movement
+        # grounded = False -> Cannot jump anymore
+        # 
+        
+
+        if self.JUMP and self.in_jump:
             self.velocity += Vector(0, -5) * self.speed
         elif self.GRAVITY:
             self.velocity.y += self.weight
@@ -240,6 +258,8 @@ class State(Entity):
                         self.ATTACK1_COOLDOWN = True
 
         elif self.JUMP:
+            self.in_jump = True
+            self.grounded = False
             # Choosing correct row
             self.frame_index = [0, 4]
             if self.idle_frame == [0, 0]:
@@ -252,6 +272,7 @@ class State(Entity):
             # Control FPS and turns off animation
             if self.frame_count % 8 == 0:
                 self.JUMP = False
+                self.in_jump = False
                 self.FALL = True
 
         elif self.FALL:
@@ -261,7 +282,7 @@ class State(Entity):
                 self.frame_index = [1, 3]
 
             # Fall animation until touches ground
-            if self.position.y == 900 - self.frame_centre_y:
+            if self.grounded:
                 self.FALL = False
 
         elif self.RIGHT and not self.LEFT:

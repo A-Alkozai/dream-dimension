@@ -2,9 +2,10 @@ from state import State
 
 
 class Projectile(State):
-    def __init__(self, damage=50, **kwargs):
-        super().__init__(**kwargs)
+    def __init__(self, name, damage=50, **kwargs):
+        super().__init__(name, **kwargs)
 
+        self.name = name
         self.GRAVITY = False
         self.IDLE = False
         self.DEAD = False
@@ -15,7 +16,7 @@ class Projectile(State):
         self.damage = damage
 
     def update(self):
-        self.direction(self.is_right)
+        self.set_direction(self.is_right)
         self.frame_update()
         self.movement()
         self.velocity.y = 0

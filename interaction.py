@@ -4,28 +4,51 @@ class Interaction:
     def __init__(self) -> None:
         pass
 
-    def calculate_all_collisions(self, all_entities):
+    def calculate_all_collisions(self, all_entities): 
         for entity in all_entities:
+            if entity.name == 'block': continue
+
             for entity2 in all_entities:
                 if entity == entity2: continue
-
+                # if entity2.name in entity.colission_mask: continue
                 # calculate collision
                 self.calculate_collisions(entity, entity2)
 
-    def calculate_colissions(entity, entity2):
-        entity_radius = entity.frame_centre_x
+    def calculate_collisions(self, entity, collider):
+        #  distance from centre of an entity to the edge
+        entity_radius = 30
+
+        # collider edges
+        collider_top_edge = collider.position.y - entity_radius
+        collider_bottom_edge = collider.position.y + entity_radius
+        collider_left_edge = collider.position.x - entity_radius
+        collider_right_edge = collider.position.x + entity_radius
+
+        # entity edges
+        entity_top_edge = entity.position.y - entity_radius
+        entity_bottom_edge = entity.position.y + entity_radius
+        entity_left_edge = entity.position.x - entity_radius
+        entity_right_edge = entity.position.x + entity_radius
         
         #top
-        
-        # if between left and right and touching/below the top but above centre
+        if collider_left_edge <= entity.position.x <= collider_right_edge:
+            # top
+            if collider_top_edge <= entity_bottom_edge <= collider.position.y:
+                entity.position.y = collider_top_edge - entity_radius
+                # set player grounded variable
+                entity.grounded = True if entity.name == 'player' else False
 
-        #bottom
-        # if between left and right and touching/above the bottom but below centre
+            # bottom
+            if collider_bottom_edge >= entity_top_edge >= collider.position.y:
+                entity.position.y = collider_bottom_edge + entity_radius
 
-        #left
-        # if between top and bottom and touching/right of the left edge but left of the centre 
+        if collider_top_edge <= entity.position.y <= collider_bottom_edge:
+            # left
+            if collider_left_edge <= entity_right_edge <= collider.position.x:
+                entity.position.x = collider_left_edge - entity_radius
 
-        #right
-        # if between top and bottom and touching/left of the right edge but right of the centre 
+            # right
+            if collider_right_edge >= entity_left_edge >= collider.position.x:
+                entity.position.x = collider_right_edge + entity_radius
 
     

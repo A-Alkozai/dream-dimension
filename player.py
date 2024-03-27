@@ -5,16 +5,20 @@ from projectile import Projectile
 
 
 class Player(State):
-    def __init__(self, **kwargs):
-        super().__init__(**kwargs)
+    def __init__(self,name, **kwargs):
+        super().__init__(name, **kwargs)
 
+        self.name = name
         # Lives & Score tracker
         self.points = 0
         self.lives = 3
+        self.grounded = False
+
 
     def key_down(self, key):
-        if key == simplegui.KEY_MAP["space"]:
+        if key == simplegui.KEY_MAP["space"] and self.grounded:
             self.JUMP = True
+            # self.grounded = False
         if key == simplegui.KEY_MAP["a"]:
             self.LEFT = True
         if key == simplegui.KEY_MAP["d"]:
@@ -42,7 +46,8 @@ class Player(State):
             if self.frame_index[1] == 10:
                 move_right = False
                 adjust_x = -10
-            self.projectile = Projectile(img_url="images/magic_shot.png", img_dest_dim=(50, 50),
+            self.projectile = Projectile('player_projectile', img_url="images/magic_shot.png", img_dest_dim=(60, 60),
                                          position=Vector(self.position.x + adjust_x, self.position.y), row=2, column=15,
                                          speed=1.2)
             self.projectile.is_right = move_right
+            self.game_manager.add_entity(self.projectile)

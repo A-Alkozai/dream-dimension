@@ -6,9 +6,11 @@ import math
 
 
 class Enemy(State):
-    def __init__(self, is_ranged=True, mana_max=40, mana_recharge_rate=20, **kwargs):
-        super().__init__(**kwargs)
+    def __init__(self,name, is_ranged=True, mana_max=40, mana_recharge_rate=20, **kwargs):
+        super().__init__(name,**kwargs)
+        self.name = name
 
+        self.grounded = False
         # create tracking and attack distance
         self.is_ranged = is_ranged
         if self.is_ranged:
@@ -65,9 +67,10 @@ class Enemy(State):
             if self.frame_index[1] == 6:
                 move_right = False
                 adjust_x = -10
-            self.projectile = Projectile(img_url="images/magic_shot.png", img_dest_dim=(50, 50),
+            self.projectile = Projectile(name='enemy_projectile', img_url="images/magic_shot.png", img_dest_dim=(60, 60),
                                          position=Vector(self.position.x + adjust_x, self.position.y), row=2, column=15,
                                          speed=1.2)
             self.projectile.is_red = False
             self.projectile.is_friendly = False
             self.projectile.is_right = move_right
+            self.game_manager.add_entity(self.projectile)
