@@ -65,17 +65,17 @@ class MapManager():
                                 walk_frames=3, jump_frames=2, attack_frames=3,
                                 dmg_frames=2, speed=0.6, img_url="images/orc_warrior.png",
                                 img_dest_dim=(60, 60),position=cell_pos, row=7,
-                                column=4, game_manager=self.game_manager, health_max=2),
+                                column=4, game_manager=self.game_manager, health_max=1),
                             Enemy('enemy', is_ranged=True,
                                 walk_frames=3, jump_frames=2, attack_frames=4,
                                 dmg_frames=2, speed=0.4, img_url="images/orc_hunter.png",
                                 img_dest_dim=(60, 60), position=cell_pos, row=7,
-                                column=8, game_manager=self.game_manager, health_max=2), 
+                                column=8, game_manager=self.game_manager, health_max=1),
                             Enemy('enemy', is_ranged=True,
                                 walk_frames=3, jump_frames=2, attack_frames=4,
                                 dmg_frames=2, speed=0.4, img_url="images/orc_shaman.png",
                                 img_dest_dim=(60, 60),position=cell_pos, row=7,
-                                column=8, game_manager=self.game_manager, health_max=2)
+                                column=8, game_manager=self.game_manager, health_max=1)
                         ]
 
                         block_entity = random.choice(enemies)                

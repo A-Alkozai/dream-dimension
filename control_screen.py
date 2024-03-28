@@ -71,3 +71,4 @@ class ControlScreen:
     def go_back(self):
         self.show_controls_screen = False
         self.welcome_screen.show_welcome_screen = True
+        self.welcome_screen.credits_shown = False

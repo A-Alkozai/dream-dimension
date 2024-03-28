@@ -26,6 +26,7 @@ class Enemy(State):
             self.fps = 6
 
         self.damage = 1
+        self.health = 2
         self.score = score
 
         # Mana attributes for enemy

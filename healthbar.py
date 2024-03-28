@@ -13,7 +13,6 @@ class HealthBar():
     def draw(self, canvas, health):
         heart_img_dim = 60
         for i in range(health):
-            print(health)
             position = ((heart_img_dim / 2) + (heart_img_dim * i), heart_img_dim / 2 + 50)
             canvas.draw_image(self.heart_img, (180,180), (360,360), position, (60,60))
 

@@ -5,7 +5,7 @@ from entity import Entity
 
 
 class State(Entity):
-    def __init__(self, name, walk_frames=0, jump_frames=0, attack_frames=0, dmg_frames=0, health_max=100, mana_max=120,
+    def __init__(self, name, walk_frames=0, jump_frames=0, attack_frames=0, dmg_frames=0, health_max=1, mana_max=120,
                  mana_recharge_rate=5, gravity_strength=1.5, player=None, projectile=None, interaction=None, speed=1,
                  **kwargs):
 
@@ -45,6 +45,7 @@ class State(Entity):
         self.idle_frame = [0, 0]
         self.fps = 3
         self.in_jump = False
+        self.is_ranged = False
 
         # player & projectile object
         self.player = player
@@ -72,11 +73,6 @@ class State(Entity):
 
     def state_update(self):
         pass
-        # print(self.CLIMBING)
-        # if self.damaged > 0:
-        #     self.HURT = True
-        #     self.health -= self.damaged
-        #     self.damaged = 0
 
     def deal_damage(self, amount):
         self.HURT = True
@@ -84,7 +80,6 @@ class State(Entity):
         self.health -= amount
 
         if self.health <= 0:
-            # TODO: ADD SCORE
             self.die()
             
     def die(self):
@@ -98,52 +93,24 @@ class State(Entity):
         self.movement()
         # Add all movements
         self.position.add(self.velocity)
-        # Ensure entity not below floor
-        # self.position.y = min(self.position.y, 900 - self.frame_centre_y)
         self.velocity.multiply(0.80)
 
     def movement(self):
         speed = self.speed
 
-
-        # self.CLIMB = true only if self.on_ladder and 'w'
-        # climb movement only if self.in_climb = true
-        # Whilst in climb movement, self.on_ladder = False
-
-
-        # Simulation
-
-        # On ladder 
-        # self.CLIMB = true 
-        # in_climb = true
-        # Climb movement
-        # on_ladder = False -> Cannot climb anymore
-        # 
-
         if self.CLIMB:
-            # check if still on ladder
-            # aka update on_ladder
             ladders = [entity for entity in self.game_manager.all_entities if entity.name == 'ladder']
 
+            # update on_ladder
             for ladder in ladders:
                 if self.game_manager.interaction_manager.is_overlapping(self, ladder):
                     self.on_ladder = True
                     break
                 else:
                     self.on_ladder = False
+            # ladder climbing movement
             if self.on_ladder:
                 self.velocity.y += (Vector(0, -3) * self.speed).y
-            
-            
-            #         for ladder in ladders:
-            # if self.game_manager.interaction_manager.is_overlapping(self, ladder):
-            #     self.on_ladder = True
-            #     break
-            # else:
-            #     self.CLIMB = False
-
-            #     self.on_ladder = False
-            
             
         elif self.JUMP and self.in_jump:
             self.velocity += Vector(0, -6) * self.speed
@@ -291,6 +258,16 @@ class State(Entity):
                     if self.frame_index[0] == 3 and self.player is not None:
                         self.SHOOTING = True
                         self.shoot()
+
+                    # Damage at 2nd frame
+                    if self.frame_index[0] == 1 and not self.is_ranged:
+                        for entity in self.game_manager.all_entities:
+                            target = 'enemy'
+                            if self.name == 'enemy':
+                                target = 'player'
+                            if ((entity.name == target and entity != self)
+                                    and self.game_manager.interaction_manager.is_overlapping(self, entity)):
+                                entity.deal_damage(2)
 
                     # Turns off animation at last frame
                     if self.frame_index[0] == 0:

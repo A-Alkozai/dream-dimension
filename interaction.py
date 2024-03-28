@@ -20,7 +20,7 @@ class Interaction:
         return is_overlapping
 
     def is_colliding(self, entity, collider):
-         #  distance from centre of an entity to the edge
+        # distance from centre of an entity to the edge
         # collider edges
         collider_edges = self.get_collider_edges(collider)
 

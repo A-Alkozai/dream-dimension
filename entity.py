@@ -16,7 +16,7 @@ class Entity:
                  frames=1,
                  game_manager=None,
                  collision_mask=[],
-                 health=3
+                 health=6
                  ):
 
         self.game_manager = game_manager

@@ -55,7 +55,6 @@ class GameState:
     def clear_screen(self):
         self.all_entities = []
 
-    def load_map(self): self.map.load()
 
     def draw(self, canvas):
         self.background.draw(canvas)

@@ -31,13 +31,11 @@ class Player(State):
             if self.game_manager.interaction_manager.is_colliding(self, block)[0]:
                 self.grounded = True
 
-        # print(self.health)
-         # def update(self):
-        enemies = [entity for entity in self.game_manager.all_entities if entity.name == 'enemy']
-        for enemy in enemies:
-            if self.game_manager.interaction_manager.is_colliding(self, enemy)[0]:
-                self.deal_damage(enemy.damage)
-                self.game_manager.remove_entity(enemy)
+        # enemies = [entity for entity in self.game_manager.all_entities if entity.name == 'enemy']
+        # for enemy in enemies:
+        #     if self.game_manager.interaction_manager.is_colliding(self, enemy)[0]:
+        #         self.deal_damage(enemy.damage)
+        #         self.game_manager.remove_entity(enemy)
 
 
     def die(self):

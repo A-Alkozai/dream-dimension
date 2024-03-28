@@ -8,7 +8,7 @@ class ScoreCounter:
 
     # Handler to draw on canvas
     def draw(self, canvas):
-        canvas.draw_text("Score: " + str(self.score), (10, 40), 40, 'Black')
+        canvas.draw_text("Score: " + str(self.score), (10, 40), 40, 'White')
 
     # Handler to increase score
     def add_score(self, amount):
