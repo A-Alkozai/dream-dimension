@@ -4,14 +4,16 @@ from vector import Vector
 from state import State
 import math
 
-
 class Enemy(State):
     def __init__(self,name, is_ranged=True, mana_max=40, mana_recharge_rate=20, **kwargs):
-        super().__init__(name,**kwargs)
+        super().__init__(name, **kwargs)
         self.name = name
 
+        self.player = self.game_manager.player
+
         self.grounded = False
-        self.collision_mask = ['ladder', 'enemy_projectile', 'enemy', 'player', 'player_projectile']
+        self.collision_mask = ['ladder', 'enemy_projectile', 'enemy', 'player', 'player_projectile', 'portal']
+
         # create tracking and attack distance
         self.is_ranged = is_ranged
         if self.is_ranged:
@@ -23,11 +25,15 @@ class Enemy(State):
             self.attack_range = 30
             self.fps = 6
 
+        self.damage = 1
+
         # Mana attributes for enemy
         self.max_mana = mana_max
         self.current_mana = self.max_mana
         self.mana_recharge_rate = mana_recharge_rate
         self.mana_recharge_timer = simplegui.create_timer(1000, self.recharge_mana)
+
+   
 
     def state_update(self):
         super().state_update()
@@ -70,7 +76,7 @@ class Enemy(State):
                 adjust_x = -10
             self.projectile = Projectile(name='enemy_projectile', img_url="images/magic_shot.png", img_dest_dim=(60, 60),
                                          position=Vector(self.position.x + adjust_x, self.position.y), row=2, column=15,
-                                         speed=1.2, collision_mask=['enemy_projectile', 'enemy', 'ladder', 'player', 'player_projectile'],
+                                         speed=1.2,
                                          game_manager=self.game_manager)
             self.projectile.is_red = False
             self.projectile.is_friendly = False

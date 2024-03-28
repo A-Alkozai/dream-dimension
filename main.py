@@ -4,7 +4,7 @@ from interaction import Interaction
 from GameState import GameState
 from map import MapManager
 
-gameManager = GameState()
+
 
 
 interaction = Interaction()
@@ -13,14 +13,14 @@ prev_map = 0
 
 def draw(canvas):
     # object.map1.draw(canvas)
-    gameManager.draw(canvas)
+    game_manager.draw(canvas)
 
-    for i in range(gameManager.CANVAS_WIDTH):
+    for i in range(game_manager.CANVAS_WIDTH):
         if i % 60 == 0:
-            canvas.draw_line((i, 0), (i, gameManager.CANVAS_HEIGHT), 2, 'black')
-    for i in range(gameManager.CANVAS_HEIGHT):
+            canvas.draw_line((i, 0), (i, game_manager.CANVAS_HEIGHT), 2, 'black')
+    for i in range(game_manager.CANVAS_HEIGHT):
         if i % 60 == 0:
-            canvas.draw_line((0, i), (gameManager.CANVAS_WIDTH, i), 2, 'black')
+            canvas.draw_line((0, i), (game_manager.CANVAS_WIDTH, i), 2, 'black')
 
 
 
@@ -38,14 +38,16 @@ def draw(canvas):
 #         if object.welcome_screen.highscore_screen.back_button.contains_point(pos):
 #             object.welcome_screen.highscore_screen.go_back()
 
+CANVAS_WIDTH = 1920
+CANVAS_HEIGHT = 1080
 
 # Create a frame
-frame = simplegui.create_frame("Game", gameManager.CANVAS_WIDTH, gameManager.CANVAS_HEIGHT, 0)
+frame = simplegui.create_frame("Game", CANVAS_WIDTH, CANVAS_HEIGHT, 0)
 frame.set_canvas_background("White")
 
+game_manager = GameState(frame, CANVAS_WIDTH, CANVAS_HEIGHT)
+
 # Set keyboard handlers
-frame.set_keydown_handler(gameManager.player.key_down)
-frame.set_keyup_handler(gameManager.player.key_up)
 game_started = False
 
 # Set mouse click handler

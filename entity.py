@@ -14,21 +14,28 @@ class Entity:
                  column=1,
                  frames=1,
                  game_manager=None,
-                 collision_mask=[]
+                 collision_mask=[],
+                 health=3
                  ):
         
         self.game_manager = game_manager
         self.name = name
         self.collision_mask = collision_mask
 
+        self.active = True
+
         self.position = position
         self.velocity = velocity
         self.rotation = rotation
 
+<<<<<<< HEAD
         self.health = 1
         self.damaged = 0
 
         self.active = True
+=======
+        self.health = health
+>>>>>>> 818937f2c5f104406acda261ffcd459a223d7bde
 
         self.img_url = img_url
 
@@ -52,10 +59,11 @@ class Entity:
         self.frame_centre_y = self.frame_height/2
         self.frame_index = [0, 0]
 
-    # def take_damage(self, amount):
-    #     self.health -= amount
+    def __str__(self):
+        return self.name
 
-    #     if self.health <= 0: self.DEAD = True
+    def destroy(self):
+        self.game_manager.remove_entity(self)
 
     def draw(self, canvas):
         if not self.active: return
