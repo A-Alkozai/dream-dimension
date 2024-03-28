@@ -8,13 +8,13 @@ class HealthBar():
     def __init__(self):
         # super().__init__('healthbar', **kwargs)
 
-        self.heart_img = simplegui._load_local_image('images/heart.jpg')
+        self.heart_img = simplegui._load_local_image('images/heart.png')
 
     def draw(self, canvas, health):
         heart_img_dim = 60
         for i in range(health):
             print(health)
-            position = ((heart_img_dim / 2) + (heart_img_dim * i), heart_img_dim / 2)
+            position = ((heart_img_dim / 2) + (heart_img_dim * i), heart_img_dim / 2 + 50)
             canvas.draw_image(self.heart_img, (180,180), (360,360), position, (60,60))
 
 

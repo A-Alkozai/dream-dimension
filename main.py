@@ -15,12 +15,12 @@ def draw(canvas):
     # object.map1.draw(canvas)
     game_manager.draw(canvas)
 
-    for i in range(game_manager.CANVAS_WIDTH):
-        if i % 60 == 0:
-            canvas.draw_line((i, 0), (i, game_manager.CANVAS_HEIGHT), 2, 'black')
-    for i in range(game_manager.CANVAS_HEIGHT):
-        if i % 60 == 0:
-            canvas.draw_line((0, i), (game_manager.CANVAS_WIDTH, i), 2, 'black')
+    # for i in range(game_manager.CANVAS_WIDTH):
+    #     if i % 60 == 0:
+    #         canvas.draw_line((i, 0), (i, game_manager.CANVAS_HEIGHT), 2, 'black')
+    # for i in range(game_manager.CANVAS_HEIGHT):
+    #     if i % 60 == 0:
+    #         canvas.draw_line((0, i), (game_manager.CANVAS_WIDTH, i), 2, 'black')
 
 
 

@@ -6,6 +6,12 @@ from enemy import Enemy
 from map import MapManager
 from interaction import Interaction
 from healthbar import HealthBar
+from entity import Entity
+
+from scorecounter import ScoreCounter
+from mana import ManaBar
+
+from welcome_screen import WelcomeScreen
 
 class GameState:
     def __init__(self, frame, width, height) -> None:
@@ -19,31 +25,18 @@ class GameState:
         self.player_health = 3
 
         self.healthbar = HealthBar()
+        self.scorecounter = ScoreCounter()
+        self.mana_bar = ManaBar(self)
 
         self.interaction_manager = Interaction()
         
         self.map = MapManager(self)
-        self.map.load()
+        self.background = Background(self.CANVAS_WIDTH, self.CANVAS_HEIGHT)
+        self.is_game_started = False
+        # self.map.load()
 
-        # Create player
-        # self.player = Player('player',walk_frames=8, jump_frames=2, attack_frames=4, dmg_frames=2, img_url="images/player.png",
-        #                 img_dest_dim=(60, 60), position=Vector(500, 700), row=13, column=8, game_manager=self)
-
-        # # Create enemies
-        # self.enemy1 = Enemy('enemy', is_ranged=False, player=self.player, walk_frames=3, jump_frames=2, attack_frames=3,
-        #             dmg_frames=2, speed=0.6, img_url="images/orc_warrior.png", img_dest_dim=(60, 60),
-        #             position=Vector(100, 100), row=7, column=4, game_manager=self)
-        # self.enemy2 = Enemy('enemy', is_ranged=True, player=self.player, walk_frames=3, jump_frames=2, attack_frames=4,
-        #             dmg_frames=2, speed=0.4, img_url="images/orc_hunter.png", img_dest_dim=(60, 60),
-        #             position=Vector(900, 100), row=7, column=8, game_manager=self)
-        # self.enemy3 = Enemy('enemy', is_ranged=True, player=self.player, walk_frames=3, jump_frames=2, attack_frames=4,
-        #             dmg_frames=2, speed=0.4, img_url="images/orc_shaman.png", img_dest_dim=(60, 60),
-        #             position=Vector(1000, 100), row=7, column=8, game_manager=self)
-
-        # self.all_entities.append(self.player)
-        # self.all_entities.append(self.enemy1)
-        # self.all_entities.append(self.enemy2)
-        # self.all_entities.append(self.enemy3)
+        self.welcome_screen = WelcomeScreen(self)
+        self.frame.set_mouseclick_handler(self.welcome_screen.mouse_click)
     
     def add_entity(self, entity):
         self.all_entities.append(entity)
@@ -54,13 +47,25 @@ class GameState:
     def clear_screen(self):
         self.all_entities = []
 
-    def draw(self, canvas):
-        # for item in self.all_entities: print(item.name, end=' ')
-        # print()
+    def load_map(self): self.map.load()
 
+    def draw(self, canvas):
+        self.background.draw(canvas)
+        self.welcome_screen.draw(canvas)
+
+        if not self.is_game_started: return
         self.healthbar.draw(canvas, self.player.health)
+        self.scorecounter.draw(canvas)
+        self.mana_bar.draw(canvas)
 
         for entity in self.all_entities:
             entity.update()
             entity.draw(canvas)
+
         if len(self.all_entities) > 0: self.interaction_manager.calculate_all_collisions(self.all_entities)
+
+class Background(Entity):
+    def __init__(self, canvas_width, canvas_height):
+        super().__init__(position = Vector(canvas_width / 2, canvas_height / 2),
+                         img_url="images/background.png",
+                         img_dest_dim=(canvas_width, canvas_height))
