@@ -41,6 +41,9 @@ class GameState:
     def add_entity(self, entity):
         self.all_entities.append(entity)
 
+    def remove_entity(self, entity):
+        self.all_entities.remove(entity)
+
     def draw(self, canvas):
         # for item in self.all_entities: print(item.name, end=' ')
         # print()

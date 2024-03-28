@@ -16,9 +16,9 @@ class Projectile(State):
         self.damage = damage
 
         if name.startswith('player'):
-            self.targets_names = ['enemy']
+            self.target_names = ['enemy', 'block', 'enemy_projectile']
         if name.startswith('enemy'):
-            self.targets_names = ['player']
+            self.target_names = ['player', 'block', 'player_projectile']
 
     def update(self):
         self.set_direction(self.is_right)
@@ -30,13 +30,16 @@ class Projectile(State):
         self.velocity.multiply(0.85)
 
         # 
-        targets = [entity for entity in self.game_manager.all_entities if entity.name in self.targets_names]
+        targets = [entity for entity in self.game_manager.all_entities if entity.name in self.target_names]
         for target in targets:
             if self.game_manager.interaction_manager.is_overlapping(self, target):
                 # do damage to target
                 target.damaged += self.damage
-                # target.health -= self.damage
                 self.DEAD = True
+                break
+
+        if self.DEAD:
+            self.game_manager.remove_entity(self)
 
     def frame_update(self):
         # Choose correct row

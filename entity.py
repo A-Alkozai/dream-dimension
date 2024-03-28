@@ -25,7 +25,8 @@ class Entity:
         self.velocity = velocity
         self.rotation = rotation
 
-        self.health = 3
+        self.health = 1
+        self.damaged = 0
 
         self.active = True
 
