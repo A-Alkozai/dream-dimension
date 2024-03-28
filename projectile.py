@@ -31,28 +31,14 @@ class Projectile(State):
         self.boundaries()
         self.velocity.multiply(0.85)
 
-<<<<<<< HEAD
-        #
-        targets = [entity for entity in self.game_manager.all_entities if entity.name in self.target_names]
-        for target in targets:
-            if self.game_manager.interaction_manager.is_overlapping(self, target):
-                # do damage to target
-                target.damaged += self.damage
-                self.DEAD = True
-                break
-
-        if self.DEAD:
-            self.game_manager.remove_entity(self)
-=======
         targets = [entity for entity in self.game_manager.all_entities if entity.name in self.targets_names]
         for target in targets:
             if self.game_manager.interaction_manager.is_overlapping(self, target):
                 # do damage to target
                 self.destroy()
                 target.deal_damage(self.damage)
-                
+
                 # target.health -= self.damage
->>>>>>> 818937f2c5f104406acda261ffcd459a223d7bde
 
     def frame_update(self):
         # Choose correct row

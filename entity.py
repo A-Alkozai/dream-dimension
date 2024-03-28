@@ -2,13 +2,14 @@
 import SimpleGUICS2Pygame.simpleguics2pygame as simplegui
 from vector import Vector
 
+
 class Entity:
-    def __init__(self, 
+    def __init__(self,
                  name,
                  position=Vector(),
                  velocity=Vector(),
                  rotation=0,
-                 img_url="", 
+                 img_url="",
                  img_dest_dim=None,
                  row=1,
                  column=1,
@@ -17,7 +18,7 @@ class Entity:
                  collision_mask=[],
                  health=3
                  ):
-        
+
         self.game_manager = game_manager
         self.name = name
         self.collision_mask = collision_mask
@@ -28,14 +29,7 @@ class Entity:
         self.velocity = velocity
         self.rotation = rotation
 
-<<<<<<< HEAD
-        self.health = 1
-        self.damaged = 0
-
-        self.active = True
-=======
         self.health = health
->>>>>>> 818937f2c5f104406acda261ffcd459a223d7bde
 
         self.img_url = img_url
 
@@ -51,12 +45,12 @@ class Entity:
         self.column = column
         self.totalFrames = frames
         self.frame_count = 0
-        self.frame_width = self.img.get_width()/column
-        self.frame_height = self.img.get_height()/row
+        self.frame_width = self.img.get_width() / column
+        self.frame_height = self.img.get_height() / row
         self.img_dim = (self.frame_width, self.frame_height)
 
-        self.frame_centre_x = self.frame_width/2
-        self.frame_centre_y = self.frame_height/2
+        self.frame_centre_x = self.frame_width / 2
+        self.frame_centre_y = self.frame_height / 2
         self.frame_index = [0, 0]
 
     def __str__(self):
@@ -82,6 +76,6 @@ class Entity:
         self.frame_index[0] = (self.frame_index[0] + 1) % self.column
         if self.frame_index[0] == 0:
             self.frame_index[1] = (self.frame_index[1] + 1) % self.row
-    
+
     def on_collision(self, collider):
         pass

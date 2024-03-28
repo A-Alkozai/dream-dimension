@@ -17,7 +17,7 @@ class GameState:
         self.all_entities = []
         self.player = None
         self.player_health = 3
-        
+
         self.healthbar = HealthBar()
 
         self.interaction_manager = Interaction()
@@ -50,6 +50,9 @@ class GameState:
 
     def remove_entity(self, entity):
         self.all_entities.remove(entity)
+
+    def clear_screen(self):
+        self.all_entities = []
 
     def draw(self, canvas):
         # for item in self.all_entities: print(item.name, end=' ')
