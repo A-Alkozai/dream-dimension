@@ -18,9 +18,9 @@ class Projectile(State):
         self.damage = damage
 
         if name.startswith('player'):
-            self.targets_names = ['enemy']
+            self.target_names = ['enemy', 'block', 'enemy_projectile']
         if name.startswith('enemy'):
-            self.targets_names = ['player']
+            self.target_names = ['player', 'block', 'player_projectile']
 
     def update(self):
         self.set_direction(self.is_right)

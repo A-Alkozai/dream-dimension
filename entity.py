@@ -28,7 +28,14 @@ class Entity:
         self.velocity = velocity
         self.rotation = rotation
 
+<<<<<<< HEAD
         self.health = health
+=======
+        self.health = 1
+        self.damaged = 0
+
+        self.active = True
+>>>>>>> ea17fa5372d358acfa980e737add9567d4302a88
 
         self.img_url = img_url
 
