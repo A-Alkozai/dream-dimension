@@ -21,7 +21,8 @@ class MapManager():
 
     def change_room(self, direction):
         self.current_room_index += direction
-        self.game_manager.all_entities = []
+        self.game_manager.clear_screen()
+        self.game_manager.add_entity(self.game_manager.player)
 
         # save player health
         self.game_manager.player_health = self.game_manager.player.health
@@ -56,15 +57,7 @@ class MapManager():
                         entity_name = 'portal'
                         block_entity = Portal(entity_name, position=cell_pos, direction=-1, img_url=cell_image, img_dest_dim=(60,60), game_manager=self.game_manager)
                     case 's':
-                        entity_name = 'player'
-                        block_entity = Player(entity_name,position=cell_pos, game_manager=self.game_manager, health=self.game_manager.player_health)
-
-                        # input handling for player
-                        self.game_manager.frame.set_keydown_handler(block_entity.key_down)
-                        self.game_manager.frame.set_keyup_handler(block_entity.key_up)
-
-                        self.game_manager.player = block_entity
-                        self.game_manager.player_health = block_entity.health
+                        self.game_manager.player.position = cell_pos
                     case 'e':
                         entity_name = 'enemy'
                         enemies = [

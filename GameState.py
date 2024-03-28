@@ -29,6 +29,13 @@ class GameState:
         self.mana_bar = ManaBar(self)
 
         self.interaction_manager = Interaction()
+
+        self.player = Player('player',position=(0,0), game_manager=self, health=self.player_health)
+        self.add_entity(self.player)
+
+        # input handling for player
+        self.frame.set_keydown_handler(self.player.key_down)
+        self.frame.set_keyup_handler(self.player.key_up)
         
         self.map = MapManager(self)
         self.background = Background(self.CANVAS_WIDTH, self.CANVAS_HEIGHT)
@@ -42,7 +49,8 @@ class GameState:
         self.all_entities.append(entity)
 
     def remove_entity(self, entity):
-        self.all_entities.remove(entity)
+        try: self.all_entities.remove(entity)
+        except: pass
 
     def clear_screen(self):
         self.all_entities = []
