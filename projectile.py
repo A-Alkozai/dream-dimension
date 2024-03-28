@@ -2,13 +2,15 @@ from state import State
 
 
 class Projectile(State):
-    def __init__(self, name, damage=50, **kwargs):
+    def __init__(self, name, damage=1, **kwargs):
         super().__init__(name, **kwargs)
 
         self.name = name
         self.GRAVITY = False
         self.IDLE = False
         self.DEAD = False
+
+        self.collision_mask = ['ladder', 'player_projectile', 'player', 'enemy', 'enemy_projectile', 'portal']
 
         self.is_right = True
         self.is_red = True
@@ -29,14 +31,14 @@ class Projectile(State):
         self.boundaries()
         self.velocity.multiply(0.85)
 
-        # 
         targets = [entity for entity in self.game_manager.all_entities if entity.name in self.targets_names]
         for target in targets:
             if self.game_manager.interaction_manager.is_overlapping(self, target):
                 # do damage to target
-                target.damaged += self.damage
+                self.destroy()
+                target.deal_damage(self.damage)
+                
                 # target.health -= self.damage
-                self.DEAD = True
 
     def frame_update(self):
         # Choose correct row

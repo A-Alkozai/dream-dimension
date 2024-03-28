@@ -71,11 +71,24 @@ class State(Entity):
         super().__init__(name, **kwargs)
 
     def state_update(self):
+        pass
         # print(self.CLIMBING)
-        if self.damaged > 0:
-            self.HURT = True
-            self.health -= self.damaged
-            self.damaged = 0
+        # if self.damaged > 0:
+        #     self.HURT = True
+        #     self.health -= self.damaged
+        #     self.damaged = 0
+
+    def deal_damage(self, amount):
+        self.HURT = True
+
+        self.health -= amount
+
+        if self.health <= 0:
+            # TODO: ADD SCORE
+            self.die()
+            
+    def die(self):
+        self.destroy()
 
     def update(self):
         # Update state before updating frame
