@@ -5,7 +5,7 @@ from vector import Vector
 
 class Entity:
     def __init__(self,
-                 name,
+                 name='',
                  position=Vector(),
                  velocity=Vector(),
                  rotation=0,
@@ -57,7 +57,10 @@ class Entity:
         return self.name
 
     def destroy(self):
-        self.game_manager.remove_entity(self)
+        try:
+            self.game_manager.remove_entity(self)
+        except:
+            pass
 
     def draw(self, canvas):
         if not self.active: return

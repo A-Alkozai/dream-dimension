@@ -31,7 +31,7 @@ class Projectile(State):
         self.boundaries()
         self.velocity.multiply(0.85)
 
-        targets = [entity for entity in self.game_manager.all_entities if entity.name in self.targets_names]
+        targets = [entity for entity in self.game_manager.all_entities if entity.name in self.target_names]
         for target in targets:
             if self.game_manager.interaction_manager.is_overlapping(self, target):
                 # do damage to target

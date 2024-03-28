@@ -5,7 +5,7 @@ from state import State
 import math
 
 class Enemy(State):
-    def __init__(self,name, is_ranged=True, mana_max=40, mana_recharge_rate=20, **kwargs):
+    def __init__(self,name, is_ranged=True, mana_max=40, mana_recharge_rate=20, score=1, **kwargs):
         super().__init__(name, **kwargs)
         self.name = name
 
@@ -26,6 +26,7 @@ class Enemy(State):
             self.fps = 6
 
         self.damage = 1
+        self.score = score
 
         # Mana attributes for enemy
         self.max_mana = mana_max

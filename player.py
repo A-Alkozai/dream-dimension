@@ -42,6 +42,8 @@ class Player(State):
 
     def die(self):
         super().die()
+        self.game_manager.clear_screen()
+        self.game_manager.welcome_screen.show_welcome_screen = True
         # END SCREEN
 
     def key_down(self, key):

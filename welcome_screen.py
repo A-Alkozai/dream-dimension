@@ -1,63 +1,72 @@
 import SimpleGUICS2Pygame.simpleguics2pygame as simplegui
 from highscore_screen import HighscoreScreen
+from control_screen import ControlScreen
+from credit_screen import CreditScreen
+from entity import Entity
+from vector import Vector
 
-
-class Button:
-    def __init__(self, label, pos, width, height, action):
-        self.label = label
-        self.pos = pos
-        self.width = width
-        self.height = height
-        self.action = action
+class Background(Entity):
+    def __init__(self, canvas_width, canvas_height, img_url):
+        super().__init__(position = Vector(canvas_width / 2, canvas_height / 2),
+                         img_url="images/background.png",
+                         img_dest_dim=(canvas_width, canvas_height))
         
-    def draw(self, canvas):
-        label_width = len(self.label) * 12
-        label_height = 24
-        canvas.draw_text(self.label, (self.pos[0] - label_width / 2, self.pos[1] + label_height / 4), 24, "White")
-        canvas.draw_polygon([(self.pos[0] - self.width / 2, self.pos[1] - self.height / 2),
-                             (self.pos[0] + self.width / 2, self.pos[1] - self.height / 2),
-                             (self.pos[0] + self.width / 2, self.pos[1] + self.height / 2),
-                             (self.pos[0] - self.width / 2, self.pos[1] + self.height / 2)], 1, "White")
+class PlayButton(Entity):
+    def __init__(self, canvas_width, canvas_height, img_url):
+        super().__init__(position = Vector(canvas_width / 2, canvas_height *3 / 4 -50), img_url= "images/play_button.png")
 
-    def contains_point(self, pos):
-        x_in_range = pos[0] >= self.pos[0] - self.width / 2 and pos[0] <= self.pos[0] + self.width / 2
-        y_in_range = pos[1] >= self.pos[1] - self.height / 2 and pos[1] <= self.pos[1] + self.height / 2
-        return x_in_range and y_in_range
+class HighscoresButton(Entity):
+    def __init__(self, canvas_width, canvas_height, img_url):
+        super().__init__(position=Vector(canvas_width / 2, canvas_height * 3 / 4 + 150), img_url="images/highscores_button.png")
 
+class ControlsButton(Entity):
+    def __init__(self, canvas_width, canvas_height, img_url):
+        super().__init__(position=Vector(canvas_width / 2, canvas_height * 3 / 4 + 100), img_url="images/controls_button.png")
+
+class CreditsButton(Entity):
+    def __init__(self, canvas_width, canvas_height, img_url):
+        super().__init__(position=Vector(canvas_width - 100, canvas_height - 50), img_url="images/credits_button.png")
 
 class WelcomeScreen:
-    def __init__(self, canvas_width, canvas_height, player):
-        self.canvas_width = canvas_width
-        self.canvas_height = canvas_height
+    def __init__(self, game_manager):
+        self.game_manager = game_manager
+
+        self.canvas_width = game_manager.CANVAS_WIDTH
+        self.canvas_height = game_manager.CANVAS_HEIGHT
         self.show_welcome_screen = True
-        self.player = player
+
         self.highscores_shown = False
-        self.highscore_screen = HighscoreScreen(canvas_width, canvas_height, [], self)  # Initialize HighscoreScreen
+        self.highscore_screen = HighscoreScreen(self.canvas_width, self.canvas_height, self)  
         
-        # Define button dimensions and positions
-        button_width = 200
-        button_height = 50
-        button_margin = 20
-        button_x = canvas_width / 2
-        play_button_y = canvas_height * 3 / 4 - button_height - button_margin
-        highscores_button_y = canvas_height * 3 / 4 + button_margin
+        self.controls_shown = False
+        self.control_screen = ControlScreen(self.canvas_width, self.canvas_height, self)
 
-        self.play_button = Button("Play/Start", (button_x, play_button_y), button_width, button_height, self.start_game)
-        self.highscores_button = Button("Highscores", (button_x, highscores_button_y), button_width, button_height, self.show_highscores)
+        self.credits_shown = False
+        self.credit_screen = CreditScreen(self.canvas_width, self.canvas_height, self)
+        
+        self.background_entity = Background(self.canvas_width, self.canvas_height, "images/background.png")
 
+        #button_spacing = 50
+        left_button_x = self.canvas_width / 4
+        right_button_x = self.canvas_width * 3 / 4
+        
+        self.play_button_entity = PlayButton(self.canvas_width, self.canvas_height, "images/play_button.png")
+        self.play_button_entity.position = Vector(left_button_x, 700)
+
+        self.highscores_button_entity = HighscoresButton(self.canvas_width, self.canvas_height, "images/highscores_button.png")
+        self.highscores_button_entity.position = Vector(right_button_x, 700)
+
+        self.controls_button_entity = ControlsButton(self.canvas_width, self.canvas_height, "images/controls_button.png")
+        self.controls_button_entity.position = Vector(self.canvas_width / 2, self.canvas_height * 3 / 4 + 150)
+
+        self.credits_button_entity = CreditsButton(self.canvas_width, self.canvas_height, "images/credits_button.png")
+        self.credits_button_entity.position = Vector(self.canvas_width -100, self.canvas_height -50)
+
+    
     def draw(self, canvas):
         if self.show_welcome_screen:
-            # Draw background gradient
-            gradient_color_top = "LightSkyBlue"
-            gradient_color_bottom = "SkyBlue"
-            canvas.draw_polygon([(0, 0), (self.canvas_width, 0), (self.canvas_width, self.canvas_height), (0, self.canvas_height)], 1, gradient_color_top, gradient_color_bottom)
-
-            # Draw border
-            border_color = "DarkBlue"
-            border_width = 2
-            canvas.draw_polygon([(border_width, border_width), (self.canvas_width - border_width, border_width),
-                                 (self.canvas_width - border_width, self.canvas_height - border_width),
-                                 (border_width, self.canvas_height - border_width)], border_width, border_color)
+        
+            self.background_entity.draw(canvas)
 
             # Draw welcome text
             welcome_text = "Welcome to the Game!"
@@ -78,23 +87,198 @@ class WelcomeScreen:
                 canvas.draw_text(sentence, [(self.canvas_width - len(sentence) * 6) / 2, 220 + i * 30], 18, welcome_color, "sans-serif")
 
             # Draw buttons
-            self.play_button.draw(canvas)
-            self.highscores_button.draw(canvas)
+            self.play_button_entity.draw(canvas)
+            self.highscores_button_entity.draw(canvas)
+            self.controls_button_entity.draw(canvas)
+            self.credits_button_entity.draw(canvas)
 
         elif self.highscores_shown:
             self.highscore_screen.draw(canvas)  # Draw HighscoreScreen if highscores are shown
 
+        elif self.controls_shown:
+            self.control_screen.draw(canvas) #Draw ControlScreen if control screen button clicked
+
+        elif self.credits_shown:
+            self.credit_screen.draw(canvas)
+    
+    def mouse_click(self, pos):
+        if self.show_welcome_screen:
+
+            play_button_distance = ((pos[0] - self.play_button_entity.position.x) ** 2 + 
+                                    (pos[1] - self.play_button_entity.position.y) ** 2) ** 0.5
+            
+            highscores_button_distance = ((pos[0] - self.highscores_button_entity.position.x) ** 2 +
+                                        (pos[1] - self.highscores_button_entity.position.y) ** 2) ** 0.5
+            
+            controls_button_distance = ((pos[0] - self.controls_button_entity.position.x) ** 2 +
+                                    (pos[1] - self.controls_button_entity.position.y) ** 2) ** 0.5
+            
+            credits_button_distance = ((pos[0] - self.credits_button_entity.position.x) ** 2 +
+                                    (pos[1] - self.credits_button_entity.position.y) ** 2) ** 0.5
+            
+
+            if play_button_distance < self.play_button_entity.img_dest_dim[0] / 2:
+                self.start_game()
+                game_started = True
+
+            elif highscores_button_distance < self.highscores_button_entity.img_dest_dim[0] / 2:
+                self.show_highscores()
+
+            elif controls_button_distance < self.controls_button_entity.img_dest_dim[0] / 2:
+                self.show_controls()
+
+            elif credits_button_distance < self.credits_button_entity.img_dest_dim[0] / 2:
+                self.show_credits()
+            
+        elif self.highscores_shown:  # Check if highscores screen is showing
+            if self.highscore_screen.back_button.contains_point(pos):
+                self.highscore_screen.go_back()
+
+        elif self.controls_shown: 
+            if self.control_screen.back_button.contains_point(pos):
+                self.control_screen.go_back()
+        
+        elif self.credits_shown:
+            if self.credit_screen.back_button.contains_point(pos):
+                self.control_screen.go_back()
+
+
     def start_game(self):
         self.show_welcome_screen = False
+        self.game_manager.is_game_started = True
+        self.game_manager.load_map()
 
     def show_highscores(self):
         self.show_welcome_screen = False
+        self.hide_controls()
+        self.hide_credits()
         self.highscores_shown = True
-        self.highscore_screen.show_highscores([("Player", self.player.points)])  # Pass player's name and points
+        self.highscore_screen.show_highscores([("Player", self.game_manager.scorecounter.score)])  # Pass player's name and points
 
     def hide_highscores(self):
         self.highscores_shown = False
 
+    def show_controls(self):
+        self.show_welcome_screen = False
+        self.hide_highscores()
+        self.hide_credits()
+        self.controls_shown = True
+        self.control_screen.show_controls()
+
+    def hide_controls(self):
+        self.controls_shown = False
+
+    def show_credits(self):
+        self.show_welcome_screen = False
+        self.hide_highscores()
+        self.hide_controls()
+        self.credits_shown = True
+        self.credit_screen.show_credits()
+    
+    def hide_credits(self):
+        self.credits_shown = False
+
     def reset_game(self):
         self.show_welcome_screen = True
         # Reset lives and score here
+
+# import SimpleGUICS2Pygame.simpleguics2pygame as simplegui
+# from highscore_screen import HighscoreScreen
+# from welcome_screen import WelcomeScreen
+# from vector import Vector
+# from player import Player
+# from enemy import Enemy
+# from map import Map
+# from entity import Entity
+
+
+# # dimensions of canvas
+# canvas_width = 1920
+# canvas_height = 1080
+
+# class WelcomeScreen:
+#     def __init__(self, game_manager) -> None:
+        
+#         self.play_button_entity = Entity(position=Vector(canvas_width / 2, canvas_height * 3 / 4 - 50), img_url="play_button.png")
+#         self.highscores_button_entity = Entity(position=Vector(canvas_width / 2, canvas_height * 3 / 4 + 50), img_url="highscores_button.png")
+#         self.controls_button_entity = Entity(position=Vector(canvas_width / 2, canvas_height * 3 / 4 + 150), img_url="controls_button.png")
+#         self.credits_button_entity = Entity(position=Vector(canvas_width -100, canvas_height -50), img_url="credits_button.png")
+
+#     def draw(self, canvas):
+#         self.play_button_entity.draw(canvas)
+#         self.highscores_button_entity.draw(canvas)
+#         self.controls_button_entity.draw(canvas)
+#         self.credits_button_entity.draw(canvas)
+
+#     def mouse_click(self, pos):
+#         if self.show_welcome_screen:
+
+#             play_button_distance = ((pos[0] - self.play_button_entity.position.x) ** 2 + 
+#                                     (pos[1] - self.play_button_entity.position.y) ** 2) ** 0.5
+            
+#             highscores_button_distance = ((pos[0] - self.highscores_button_entity.position.x) ** 2 +
+#                                         (pos[1] - self.highscores_button_entity.position.y) ** 2) ** 0.5
+            
+#             controls_button_distance = ((pos[0] - self.controls_button_entity.position.x) ** 2 +
+#                                     (pos[1] - self.controls_button_entity.position.y) ** 2) ** 0.5
+            
+#             credits_button_distance = ((pos[0] - self.credits_button_entity.position.x) ** 2 +
+#                                     (pos[1] - self.credits_button_entity.position.y) ** 2) ** 0.5
+            
+
+#             if play_button_distance < self.play_button_entity.img_dest_dim[0] / 2:
+#                 self.start_game()
+#                 game_started = True
+
+#             elif highscores_button_distance < self.highscores_button_entity.img_dest_dim[0] / 2:
+#                 self.show_highscores()
+
+#             elif controls_button_distance < self.controls_button_entity.img_dest_dim[0] / 2:
+#                 self.show_controls()
+
+#             elif credits_button_distance < self.credits_button_entity.img_dest_dim[0] / 2:
+#                 self.show_credits()
+            
+#         elif self.highscores_shown:  # Check if highscores screen is showing
+#             if self.highscore_screen.back_button.contains_point(pos):
+#                 self.highscore_screen.go_back()
+
+#         elif self.controls_shown: 
+#             if self.control_screen.back_button.contains_point(pos):
+#                 self.control_screen.go_back()
+        
+#         elif self.credits_shown:
+#             if self.credit_screen.back_button.contains_point(pos):
+#                 self.control_screen.go_back()
+
+
+# # Create a WelcomeScreen instance with canvas dimensions
+# # welcome_screen = WelcomeScreen(canvas_width, canvas_height, player)
+
+
+
+# # Create a frame
+# frame = simplegui.create_frame("Game", canvas_width, canvas_height)
+# frame.set_canvas_background("White")
+
+
+# game_started  = False
+
+# # Draw handler for the frame
+# def draw(canvas):
+#     global game_started
+#     welcome_screen.draw(canvas)
+#     # Draw other entities if welcome screen is not showing
+   
+
+
+# # Mouse click handler for the frame
+
+# # Draw the frame
+# frame.set_draw_handler(draw)
+
+# # Set mouse click handler
+# frame.set_mouseclick_handler(mouse_click)
+
+# # Start the frame
+# frame.start()
