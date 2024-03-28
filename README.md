@@ -1,0 +1,15 @@
+- enemy.py: This is the enemy that the player can kill
+- entity.py: This is the class which every 'gameobject' inherits from. It contains important variables such as position, velocity etc
+- GameState.py: This is the class that manages the whole game. It is in charge of drawing all entities as well as managing ui screens.
+- healthbar.py: This is the ui element for th eplayer's hearts
+-  highscore_screen.py: This is a UI panel that displays the score of the players last run
+- interaction.py: This handles colission between entities
+- main.y: this is the entry point of the project
+- mana.py: This is the ui element fr player 'energy'/'mana'
+- map.json: In this file is an array of room layouts defining the game map
+- player.py: This is the class that describes player behabiour
+- projectile.py: This class handles the bullets/projectiles that both the player and enemies shoot
+- scorecounter.py: This is the UI element keeping track of the score
+- state.py: This file manages entity state, handling animation and various other situations
+- vector.py: this is the vector class provided to us
+- welcome_screen.py: This is the main menu that displays when first running the game
