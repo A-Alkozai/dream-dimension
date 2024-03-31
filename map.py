@@ -20,7 +20,7 @@ class MapManager:
 
     def change_room(self, direction):
         self.current_room_index += direction
-        self.game_manager.scorecounter.level = self.current_room_index
+        self.game_manager.scorecounter.update_level(self.current_room_index)
         self.game_manager.clear_screen()
         self.game_manager.add_entity(self.game_manager.player)
 
@@ -61,17 +61,17 @@ class MapManager:
                     case 'e':
                         entity_name = 'enemy'
                         enemies = [
-                            Enemy('enemy', is_ranged=False,
+                            Enemy(entity_name, is_ranged=False,
                                 walk_frames=3, jump_frames=2, attack_frames=3,
                                 dmg_frames=2, velocity=Vector(0, 0), speed=0.6, img_url="images/orc_warrior.png",
                                 img_dest_dim=(60, 60),position=cell_pos, row=7,
                                 column=4, game_manager=self.game_manager, health_max=1),
-                            Enemy('enemy', is_ranged=True,
+                            Enemy(entity_name, is_ranged=True,
                                 walk_frames=3, jump_frames=2, attack_frames=4,
                                 dmg_frames=2, velocity=Vector(0, 0), speed=0.4, img_url="images/orc_hunter.png",
                                 img_dest_dim=(60, 60), position=cell_pos, row=7,
                                 column=8, game_manager=self.game_manager, health_max=1),
-                            Enemy('enemy', is_ranged=True,
+                            Enemy(entity_name, is_ranged=True,
                                 walk_frames=3, jump_frames=2, attack_frames=4,
                                 dmg_frames=2, velocity=Vector(0, 0), speed=0.4, img_url="images/orc_shaman.png",
                                 img_dest_dim=(60, 60),position=cell_pos, row=7,

@@ -55,6 +55,8 @@ class Interaction:
     
     def get_collider_edges(self, entity):
         entity_radius = 30
+        if entity.name == 'player_projectile' or entity.name == 'enemy_projectile':
+            entity_radius = 20
         collider_top_edge = entity.position.y - entity_radius
         collider_bottom_edge = entity.position.y + entity_radius
         collider_left_edge = entity.position.x - entity_radius

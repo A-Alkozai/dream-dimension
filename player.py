@@ -12,8 +12,7 @@ class Player(State):
         self.name = name
         self.collision_mask = ['ladder', 'player_projectile', 'enemy', 'enemy_projectile', 'portal']
 
-        # Lives & Score tracker
-        self.points = 0
+        # Lives tracker
         self.lives = 3
 
         self.grounded = False
@@ -23,25 +22,21 @@ class Player(State):
         super().update()
 
         ground_blocks = [entity for entity in self.game_manager.all_entities if entity.name == 'block']
-        ladders = [entity for entity in self.game_manager.all_entities if entity.name == 'ladder']
+        # ladders = [entity for entity in self.game_manager.all_entities if entity.name == 'ladder']
 
-        # if self.game_manager.interaction_manager.in_collision(self, ground_blocks):                
-        #     # set player grounded variable
-        #     self.grounded = True
         for block in ground_blocks:
-            if self.game_manager.interaction_manager.is_colliding(self, block)[0]:
+            is_touching = self.game_manager.interaction_manager.is_colliding(self, block)[0]
+            block_side = self.game_manager.interaction_manager.is_colliding(self, block)[1]
+            if is_touching and block_side == 'top':
                 self.grounded = True
-
-        # enemies = [entity for entity in self.game_manager.all_entities if entity.name == 'enemy']
-        # for enemy in enemies:
-        #     if self.game_manager.interaction_manager.is_colliding(self, enemy)[0]:
-        #         self.deal_damage(enemy.damage)
-        #         self.game_manager.remove_entity(enemy)
+            # Enable for jump if and only if touching ground, no air jumps at all
+            #     break
+            # self.grounded = False
 
     def die(self):
         super().die()
-        self.game_manager.welcome_screen.highscore_screen.scores.append(self.points)
-        self.points = 0
+        score = self.game_manager.scorecounter.score
+        self.game_manager.welcome_screen.highscore_screen.scores.append(score)
         self.game_manager.clear_screen()
         self.game_manager.welcome_screen.show_welcome_screen = True
         # END SCREEN

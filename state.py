@@ -85,8 +85,6 @@ class State(Entity):
     def die(self):
         if self.name == 'enemy':
             self.game_manager.scorecounter.add_score(self.score)
-            self.game_manager.player.points += self.score
-
         self.destroy()
 
     def update(self):

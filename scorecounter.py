@@ -7,6 +7,7 @@ class ScoreCounter:
         self.HEIGHT = 100
         self.score = 0
         self.level = 0
+        self.max_level = 0
 
     # Handler to draw on canvas
     def draw(self, canvas):
@@ -15,3 +16,9 @@ class ScoreCounter:
     # Handler to increase score
     def add_score(self, amount):
         self.score += amount
+
+    def update_level(self, amount):
+        self.level = amount
+        if self.level > self.max_level:
+            self.max_level = self.level
+            self.score += 10
