@@ -1,5 +1,6 @@
 from entity import Entity
 
+
 class Portal(Entity):
     def __init__(self, name, direction=1, **kwargs) -> None:
         super().__init__(name, **kwargs)

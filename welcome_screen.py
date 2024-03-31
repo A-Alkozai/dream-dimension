@@ -1,31 +1,36 @@
-import SimpleGUICS2Pygame.simpleguics2pygame as simplegui
 from highscore_screen import HighscoreScreen
 from control_screen import ControlScreen
 from credit_screen import CreditScreen
 from entity import Entity
 from vector import Vector
 
+
 class Background(Entity):
     def __init__(self, canvas_width, canvas_height, img_url):
         super().__init__(position = Vector(canvas_width / 2, canvas_height / 2),
                          img_url="images/background.png",
                          img_dest_dim=(canvas_width, canvas_height))
-        
+
+
 class PlayButton(Entity):
     def __init__(self, canvas_width, canvas_height, img_url):
         super().__init__(position = Vector(canvas_width / 2, canvas_height *3 / 4 -50), img_url= "images/play_button.png")
+
 
 class HighscoresButton(Entity):
     def __init__(self, canvas_width, canvas_height, img_url):
         super().__init__(position=Vector(canvas_width / 2, canvas_height * 3 / 4 + 150), img_url="images/highscores_button.png")
 
+
 class ControlsButton(Entity):
     def __init__(self, canvas_width, canvas_height, img_url):
         super().__init__(position=Vector(canvas_width / 2, canvas_height * 3 / 4 + 100), img_url="images/controls_button.png")
 
+
 class CreditsButton(Entity):
     def __init__(self, canvas_width, canvas_height, img_url):
         super().__init__(position=Vector(canvas_width - 100, canvas_height - 50), img_url="images/credits_button.png")
+
 
 class WelcomeScreen:
     def __init__(self, game_manager):
@@ -61,7 +66,6 @@ class WelcomeScreen:
 
         self.credits_button_entity = CreditsButton(self.canvas_width, self.canvas_height, "images/credits_button.png")
         self.credits_button_entity.position = Vector(self.canvas_width -100, self.canvas_height -50)
-
     
     def draw(self, canvas):
         if self.show_welcome_screen:
@@ -151,7 +155,6 @@ class WelcomeScreen:
         self.game_manager.map.change_room(1)
         self.game_manager.player.health = 3
         self.game_manager.player.mana = self.game_manager.player.mana_max
-
 
     def show_highscores(self):
         self.show_welcome_screen = False

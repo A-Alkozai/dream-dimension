@@ -2,7 +2,7 @@ import SimpleGUICS2Pygame.simpleguics2pygame as simplegui
 from vector import Vector
 from state import State
 from projectile import Projectile
-from healthbar import HealthBar
+
 
 class Player(State):
     def __init__(self,name, **kwargs):
@@ -11,6 +11,7 @@ class Player(State):
 
         self.name = name
         self.collision_mask = ['ladder', 'player_projectile', 'enemy', 'enemy_projectile', 'portal']
+
         # Lives & Score tracker
         self.points = 0
         self.lives = 3
@@ -37,9 +38,10 @@ class Player(State):
         #         self.deal_damage(enemy.damage)
         #         self.game_manager.remove_entity(enemy)
 
-
     def die(self):
         super().die()
+        self.game_manager.welcome_screen.highscore_screen.scores.append(self.points)
+        self.points = 0
         self.game_manager.clear_screen()
         self.game_manager.welcome_screen.show_welcome_screen = True
         # END SCREEN
@@ -47,7 +49,6 @@ class Player(State):
     def key_down(self, key):
         if key == simplegui.KEY_MAP["space"] and self.grounded:
             self.JUMP = True
-            # self.grounded = False
         if key == simplegui.KEY_MAP["a"]:
             self.LEFT = True
         if key == simplegui.KEY_MAP["d"]:

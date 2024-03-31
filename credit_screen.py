@@ -1,6 +1,6 @@
-import SimpleGUICS2Pygame.simpleguics2pygame as simplegui
 from entity import Entity
 from vector import Vector
+
 
 class Background(Entity):
     def __init__(self, canvas_width, canvas_height, img_url):

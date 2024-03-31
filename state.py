@@ -1,5 +1,4 @@
 import SimpleGUICS2Pygame.simpleguics2pygame as simplegui
-
 from vector import Vector
 from entity import Entity
 
@@ -53,6 +52,7 @@ class State(Entity):
 
         self.projectile = projectile
         self.count = 0
+        self.score = 0
 
         # general & gravity speed
         self.speed = speed
@@ -83,7 +83,10 @@ class State(Entity):
             self.die()
             
     def die(self):
-        if self.name == 'enemy': self.game_manager.scorecounter.add_score(self.score)
+        if self.name == 'enemy':
+            self.game_manager.scorecounter.add_score(self.score)
+            self.game_manager.player.points += self.score
+
         self.destroy()
 
     def update(self):
@@ -240,12 +243,6 @@ class State(Entity):
                 if self.frame_index[0] >= self.attack_frame:
                     self.frame_index[0] = 0
 
-                # Ensures attack occurs
-                if self.frame_index[0] == 1:
-                    self.HIT = True
-                else:
-                    self.HIT = False
-
                 # Reset count so animation is always played the same
                 if self.frame_count > 0:
                     self.frame_count = -self.fps + 1
@@ -262,12 +259,14 @@ class State(Entity):
                     # Damage at 2nd frame
                     if self.frame_index[0] == 1 and not self.is_ranged:
                         for entity in self.game_manager.all_entities:
+                            dmg = 2
                             target = 'enemy'
                             if self.name == 'enemy':
+                                dmg = 1
                                 target = 'player'
                             if ((entity.name == target and entity != self)
                                     and self.game_manager.interaction_manager.is_overlapping(self, entity)):
-                                entity.deal_damage(2)
+                                entity.deal_damage(dmg)
 
                     # Turns off animation at last frame
                     if self.frame_index[0] == 0:

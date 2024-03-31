@@ -4,6 +4,7 @@ from vector import Vector
 from state import State
 import math
 
+
 class Enemy(State):
     def __init__(self,name, is_ranged=True, mana_max=40, mana_recharge_rate=20, score=1, **kwargs):
         super().__init__(name, **kwargs)

@@ -2,16 +2,16 @@
 from player import Player
 from vector import Vector
 
-from enemy import Enemy
 from map import MapManager
 from interaction import Interaction
 from healthbar import HealthBar
 from entity import Entity
 
 from scorecounter import ScoreCounter
-from mana import ManaBar
+from mana_bar import ManaBar
 
 from welcome_screen import WelcomeScreen
+
 
 class GameState:
     def __init__(self, frame, width, height) -> None:
@@ -55,21 +55,22 @@ class GameState:
     def clear_screen(self):
         self.all_entities = []
 
-
     def draw(self, canvas):
         self.background.draw(canvas)
         self.welcome_screen.draw(canvas)
 
         if not self.is_game_started: return
-        self.healthbar.draw(canvas, self.player.health)
-        self.scorecounter.draw(canvas)
-        self.mana_bar.draw(canvas)
 
         for entity in self.all_entities:
             entity.update()
             entity.draw(canvas)
 
         if len(self.all_entities) > 0: self.interaction_manager.calculate_all_collisions(self.all_entities)
+
+        self.healthbar.draw(canvas, self.player.health)
+        self.scorecounter.draw(canvas)
+        self.mana_bar.draw(canvas)
+
 
 class Background(Entity):
     def __init__(self, canvas_width, canvas_height):

@@ -1,12 +1,13 @@
-import SimpleGUICS2Pygame.simpleguics2pygame as simplegui
 from entity import Entity
 from vector import Vector
+
 
 class Background(Entity):
     def __init__(self, canvas_width, canvas_height, img_url):
         super().__init__(position = Vector(canvas_width / 2, canvas_height / 2),
                          img_url="images/background.png",
                          img_dest_dim=(canvas_width, canvas_height))
+
 
 class BackButton(Entity):
     def __init__(self, canvas_width, canvas_height, img_url, goback):
@@ -17,7 +18,8 @@ class BackButton(Entity):
         x_in_range = pos[0] >= self.position.x - self.img_dest_dim[0] / 2 and pos[0] <= self.position.x + self.img_dest_dim[0] / 2
         y_in_range = pos[1] >= self.position.y - self.img_dest_dim[1] / 2 and pos[1] <= self.position.y + self.img_dest_dim[1] / 2
         return x_in_range and y_in_range
-    
+
+
 class ControlScreen:
     def __init__(self, canvas_width, canvas_height, welcome_screen):
         self.canvas_width = canvas_width

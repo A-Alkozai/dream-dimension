@@ -1,13 +1,14 @@
-import SimpleGUICS2Pygame.simpleguics2pygame as simplegui
 from entity import Entity
 from vector import Vector
 
+
 class Background(Entity):
     def __init__(self, canvas_width, canvas_height, img_url):
-        super().__init__(position = Vector(canvas_width / 2, canvas_height / 2),
+        super().__init__(position=Vector(canvas_width / 2, canvas_height / 2),
                          img_url="images/background.png",
                          img_dest_dim=(canvas_width, canvas_height))
-        
+
+
 class BackButton(Entity):
     def __init__(self, canvas_width, canvas_height, img_url, goback):
         super().__init__(position=Vector(canvas_width / 2, canvas_height * 3 / 4 + 50), img_url="images/back_button.png")
@@ -25,6 +26,7 @@ class HighscoreScreen:
         self.canvas_width = canvas_width
         self.canvas_height = canvas_height
         self.show_highscores_screen = False
+        self.scores = []
         self.highscore = 0
         self.welcome_screen = welcome_screen
 
@@ -40,23 +42,37 @@ class HighscoreScreen:
     def draw(self, canvas):
         if self.show_highscores_screen:
 
+            # Draw background
             self.background_entity.draw(canvas)
 
-            # Draw highscores text
-            title_font_size = 48
-            highscores_font_size = 24
-            title = "Score"
-            highscores_y = self.canvas_height / 4
-            title_position = ((self.canvas_width - len(title) * title_font_size) / 2, highscores_y)
+            # Draw title
+            title_font_size = 60
+            title = "|| Score Tracker ||"
+            title_position = ((self.canvas_width - len(title) * title_font_size) / 2, 180)
             canvas.draw_text(title, title_position, title_font_size, "White")
-            
-            # Draw highscores
-            highscores_start_y = highscores_y + title_font_size + 20
-            for i, (player, score) in enumerate(self.highscores, start=1):
-                highscores_text = f"{i}. {player} - {score}"  # Corrected line
-                highscores_position = ((self.canvas_width - len(highscores_text) * highscores_font_size) / 2, highscores_start_y + i * 40)  # Corrected line
-                canvas.draw_text(highscores_text, highscores_position, highscores_font_size, "White")
-                
+
+            # Draw the highest score
+            if not self.scores:
+                self.highscore = 0
+            else:
+                self.highscore = max(self.scores)
+            highscore_text = f"<<< Highscore: {self.highscore} >>>"
+            highscore_font = 40
+            highscore_position = ((self.canvas_width - len(title) * title_font_size) / 2, 280)
+            canvas.draw_text(highscore_text, highscore_position, highscore_font, "White")
+
+            # Draw all scores
+            attempt = 1
+            score_font = 25
+            score_position = [(self.canvas_width - len(title) * title_font_size) / 2, 340]
+            for score in self.scores:
+                score_text = f"Attempt {attempt}:  {score}"
+                canvas.draw_text(score_text, score_position, score_font, "White")
+                score_position[1] += 30
+                attempt += 1
+                if score_position[1] == 340+(30*15):
+                    score_position = [score_position[0] + 250, 340]
+
             # Draw back button
             self.back_button.draw(canvas)
 

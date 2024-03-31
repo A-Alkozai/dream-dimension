@@ -1,4 +1,3 @@
-# TEMP COMMENT: This class will have variables accessible to all entities.
 import SimpleGUICS2Pygame.simpleguics2pygame as simplegui
 from vector import Vector
 
@@ -81,4 +80,7 @@ class Entity:
             self.frame_index[1] = (self.frame_index[1] + 1) % self.row
 
     def on_collision(self, collider):
+        pass
+
+    def deal_damage(self, dmg):
         pass

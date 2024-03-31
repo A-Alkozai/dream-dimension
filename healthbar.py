@@ -1,6 +1,4 @@
 import SimpleGUICS2Pygame.simpleguics2pygame as simplegui
-from entity import Entity
-from vector import Vector
 
 
 # Class to represent a health bar
@@ -13,10 +11,8 @@ class HealthBar():
     def draw(self, canvas, health):
         heart_img_dim = 60
         for i in range(health):
-            position = ((heart_img_dim / 2) + (heart_img_dim * i), heart_img_dim / 2 + 50)
+            position = ((heart_img_dim / 2) + (heart_img_dim * i), heart_img_dim / 2 + 35)
             canvas.draw_image(self.heart_img, (180,180), (360,360), position, (60,60))
-
-
 
 
 # # Draw handler function for the frame
