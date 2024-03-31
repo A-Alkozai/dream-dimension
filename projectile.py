@@ -37,8 +37,8 @@ class Projectile(State):
                 # do damage to target
                 self.destroy()
                 target.deal_damage(self.damage)
-
-                # target.health -= self.damage
+            elif self.game_manager.interaction_manager.is_colliding(self, target)[0] and target.name == 'block':
+                self.destroy()
 
     def frame_update(self):
         # Choose correct row
