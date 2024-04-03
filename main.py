@@ -28,3 +28,7 @@ frame.set_draw_handler(draw)
 
 # Start the frame
 frame.start()
+
+# Current problems:
+# - Weird block collisions
+

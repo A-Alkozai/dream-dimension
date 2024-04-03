@@ -123,7 +123,7 @@ class WelcomeScreen:
 
             if play_button_distance < self.play_button_entity.img_dest_dim[0] / 2:
                 self.start_game()
-                self.game_manager.scorecounter.score = 0
+                self.game_manager.score_counter.score = 0
                 game_started = True
 
             elif highscores_button_distance < self.highscores_button_entity.img_dest_dim[0] / 2:
@@ -153,7 +153,7 @@ class WelcomeScreen:
         self.game_manager.is_game_started = True
         self.game_manager.map.current_room_index = -1
         self.game_manager.map.change_room(1)
-        self.game_manager.player.health = 3
+        self.game_manager.player.lives = 3
         self.game_manager.player.mana = self.game_manager.player.mana_max
 
     def show_highscores(self):
@@ -161,7 +161,7 @@ class WelcomeScreen:
         self.hide_controls()
         self.hide_credits()
         self.highscores_shown = True
-        self.highscore_screen.show_highscores([("Player", self.game_manager.scorecounter.score)])  # Pass player's name and points
+        self.highscore_screen.show_highscores([("Player", self.game_manager.score_counter.score)])  # Pass player's name and points
 
     def hide_highscores(self):
         self.highscores_shown = False

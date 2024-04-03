@@ -20,15 +20,15 @@ class MapManager:
 
     def change_room(self, direction):
         self.current_room_index += direction
-        self.game_manager.scorecounter.update_level(self.current_room_index)
+        self.game_manager.score_counter.update_level(self.current_room_index)
         self.game_manager.clear_screen()
         self.game_manager.add_entity(self.game_manager.player)
 
         # save player health
-        self.game_manager.player_health = self.game_manager.player.health
+        self.game_manager.player_health = self.game_manager.player.lives
         self.load()
 
-        self.game_manager.player.health = self.game_manager.player_health
+        self.game_manager.player.lives = self.game_manager.player_health
 
     def load(self):
         self.x, self.y = 0, 0
@@ -45,37 +45,37 @@ class MapManager:
 
                 match cell:
                     case 'f':
-                        entity_name = 'block'
-                        block_entity = Entity(entity_name, position=cell_pos, img_url=cell_image, img_dest_dim=(60,60))
+                        entity_kind = 'block'
+                        block_entity = Entity(kind=entity_kind, position=cell_pos, img_url=cell_image, img_dest_dim=(60,60))
                     case 'l': 
-                        entity_name = 'ladder'
-                        block_entity = Entity(entity_name, position=cell_pos, img_url=cell_image, img_dest_dim=(60,60))
+                        entity_kind = 'ladder'
+                        block_entity = Entity(kind=entity_kind, position=cell_pos, img_url=cell_image, img_dest_dim=(60,60))
                     case 'p':
-                        entity_name = 'portal'
-                        block_entity = Portal(entity_name, position=cell_pos, img_url=cell_image, img_dest_dim=(60,60), game_manager=self.game_manager)
+                        entity_kind = 'portal'
+                        block_entity = Portal(kind=entity_kind, position=cell_pos, img_url=cell_image, img_dest_dim=(60,60), game_manager=self.game_manager)
                     case 'p-':
-                        entity_name = 'portal'
-                        block_entity = Portal(entity_name, position=cell_pos, direction=-1, img_url=cell_image, img_dest_dim=(60,60), game_manager=self.game_manager)
+                        entity_kind = 'portal'
+                        block_entity = Portal(kind=entity_kind, position=cell_pos, direction=-1, img_url=cell_image, img_dest_dim=(60,60), game_manager=self.game_manager)
                     case 's':
                         self.game_manager.player.position = cell_pos
                     case 'e':
-                        entity_name = 'enemy'
+                        entity_kind = 'enemy'
                         enemies = [
-                            Enemy(entity_name, is_ranged=False,
-                                walk_frames=3, jump_frames=2, attack_frames=3,
-                                dmg_frames=2, velocity=Vector(0, 0), speed=0.6, img_url="images/orc_warrior.png",
-                                img_dest_dim=(60, 60),position=cell_pos, row=7,
-                                column=4, game_manager=self.game_manager, health_max=1),
-                            Enemy(entity_name, is_ranged=True,
-                                walk_frames=3, jump_frames=2, attack_frames=4,
-                                dmg_frames=2, velocity=Vector(0, 0), speed=0.4, img_url="images/orc_hunter.png",
-                                img_dest_dim=(60, 60), position=cell_pos, row=7,
-                                column=8, game_manager=self.game_manager, health_max=1),
-                            Enemy(entity_name, is_ranged=True,
-                                walk_frames=3, jump_frames=2, attack_frames=4,
-                                dmg_frames=2, velocity=Vector(0, 0), speed=0.4, img_url="images/orc_shaman.png",
-                                img_dest_dim=(60, 60),position=cell_pos, row=7,
-                                column=8, game_manager=self.game_manager, health_max=1)
+                            Enemy(kind=entity_kind, name='warrior', is_ranged=False,
+                                  walk_frames=3, jump_frames=2, attack_frames=3, flinch_frames=2,
+                                  velocity=Vector(0, 0), speed=0.6, img_url="images/orc_warrior.png",
+                                  img_dest_dim=(60, 60),position=cell_pos, row=7, column=4,
+                                  game_manager=self.game_manager, health=1),
+                            Enemy(kind=entity_kind, name='hunter', is_ranged=True,
+                                  walk_frames=3, jump_frames=2, attack_frames=4, flinch_frames=2,
+                                  velocity=Vector(0, 0), speed=0.3, img_url="images/orc_hunter.png",
+                                  img_dest_dim=(60, 60), cooldown=40, position=cell_pos, row=7, column=8,
+                                  game_manager=self.game_manager, health=1),
+                            Enemy(kind=entity_kind, name='shaman', is_ranged=True,
+                                  walk_frames=3, jump_frames=2, attack_frames=4, flinch_frames=2,
+                                  velocity=Vector(0, 0), speed=0.3, img_url="images/orc_shaman.png",
+                                  img_dest_dim=(60, 60), cooldown=40, position=cell_pos, row=7, column=8,
+                                  game_manager=self.game_manager, health=1)
                         ]
 
                         block_entity = random.choice(enemies)                

@@ -2,12 +2,10 @@ from entity import Entity
 
 
 class Portal(Entity):
-    def __init__(self, name, direction=1, **kwargs) -> None:
-        super().__init__(name, **kwargs)
-        
-        self.name = name
-        self.direction = direction
+    def __init__(self, direction=1, **kwargs) -> None:
+        super().__init__(**kwargs)
 
+        self.direction = direction
         self.collision_mask = ['player', 'enemy', 'player_projectile', 'enemy_projectile']
 
     def update(self):

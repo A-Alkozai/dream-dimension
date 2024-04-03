@@ -4,6 +4,7 @@ from vector import Vector
 
 class Entity:
     def __init__(self,
+                 kind='',
                  name='',
                  position=Vector(),
                  velocity=Vector(),
@@ -14,21 +15,17 @@ class Entity:
                  column=1,
                  frames=1,
                  game_manager=None,
-                 collision_mask=[],
-                 health=6
+                 collision_mask=[]
                  ):
 
         self.game_manager = game_manager
+        self.kind = kind
         self.name = name
         self.collision_mask = collision_mask
-
-        self.active = True
 
         self.position = position
         self.velocity = velocity
         self.rotation = rotation
-
-        self.health = health
 
         self.img_url = img_url
 
@@ -52,8 +49,10 @@ class Entity:
         self.frame_centre_y = self.frame_height / 2
         self.frame_index = [0, 0]
 
+        self.active = True
+
     def __str__(self):
-        return self.name
+        return self.kind
 
     def destroy(self):
         try:
@@ -62,7 +61,8 @@ class Entity:
             pass
 
     def draw(self, canvas):
-        if not self.active: return
+        if not self.active:
+            return
 
         frame_centre = (self.frame_width * self.frame_index[0] + self.frame_centre_x,
                         self.frame_height * self.frame_index[1] + self.frame_centre_y)

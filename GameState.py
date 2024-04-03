@@ -24,13 +24,14 @@ class GameState:
         self.player = None
         self.player_health = 3
 
-        self.healthbar = HealthBar()
-        self.scorecounter = ScoreCounter()
+        self.score_counter = ScoreCounter()
+        self.health_bar = HealthBar()
         self.mana_bar = ManaBar(self)
 
         self.interaction_manager = Interaction()
 
-        self.player = Player('player',position=(0,0), game_manager=self, health=self.player_health)
+        self.player = Player(kind='player', position=Vector(0, 0), game_manager=self, lives=self.player_health,
+                             img_url='images/player.png', row=13, column=8, img_dest_dim=(60, 60))
         self.add_entity(self.player)
 
         # input handling for player
@@ -49,8 +50,10 @@ class GameState:
         self.all_entities.append(entity)
 
     def remove_entity(self, entity):
-        try: self.all_entities.remove(entity)
-        except: pass
+        try:
+            self.all_entities.remove(entity)
+        except:
+            pass
 
     def clear_screen(self):
         self.all_entities = []
@@ -59,21 +62,22 @@ class GameState:
         self.background.draw(canvas)
         self.welcome_screen.draw(canvas)
 
-        if not self.is_game_started: return
+        if not self.is_game_started:
+            return
 
         for entity in self.all_entities:
             entity.update()
             entity.draw(canvas)
 
-        if len(self.all_entities) > 0: self.interaction_manager.calculate_all_collisions(self.all_entities)
+        if len(self.all_entities) > 0:
+            self.interaction_manager.calculate_all_collisions(self.all_entities)
 
-        self.healthbar.draw(canvas, self.player.health)
-        self.scorecounter.draw(canvas)
+        self.health_bar.draw(canvas, self.player.lives)
+        self.score_counter.draw(canvas)
         self.mana_bar.draw(canvas)
 
 
 class Background(Entity):
     def __init__(self, canvas_width, canvas_height):
-        super().__init__(position = Vector(canvas_width / 2, canvas_height / 2),
-                         img_url="images/background.png",
+        super().__init__(position=Vector(canvas_width / 2, canvas_height / 2), img_url="images/background.png",
                          img_dest_dim=(canvas_width, canvas_height))
