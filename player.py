@@ -1,7 +1,10 @@
+import random
+
 import SimpleGUICS2Pygame.simpleguics2pygame as simplegui
 from vector import Vector
 from state import State
 from entity import Entity
+from effects import Effect
 from projectile import Projectile
 
 
@@ -22,14 +25,20 @@ class Player(Entity):
         self.flinch_frames = 2
 
         # Mask collisions for certain entities
-        self.collision_mask = ['ladder', 'player_projectile', 'enemy', 'enemy_projectile', 'portal']
+        self.collision_mask = ['ladder', 'player_projectile', 'enemy', 'enemy_projectile', 'portal', 'drop', 'sfx']
 
         self.lives = lives
         self.weight = 1.5
         self.speed = 1
-        self.projectile = None
 
-        # mana attributes
+        # Projectile attributes
+        self.projectile = None
+        self.shotRed = False
+        self.shotPurple = False
+        self.shotSpecial = False
+        self.shotSpecial2 = False
+
+        # Mana attributes
         self.mana = 120
         self.mana_max = 120
         self.mana_recharge_rate = 0.125
@@ -37,16 +46,20 @@ class Player(Entity):
 
     def update(self):
         self.recharge_mana()
-        # Update state before updating frame
+        # Update state
         self.state_update()
+        # Check for interactions with map objects
+        self.interactions()
+        # Update frame
         self.frame_update()
+        # Calculate movements then add them
         self.movement()
-        # Add all movements
         self.position.add(self.velocity)
         self.velocity.multiply(0.80)
 
+
     def movement(self):
-        # Climb ladder
+        # Climbing ladder
         if self.state.CLIMB:
             self.climb_movement()
         elif self.state.JUMP and self.state.IN_JUMP:
@@ -80,6 +93,7 @@ class Player(Entity):
             self.state.GROUNDED = False
             self.state.FALL = True
 
+    # Update frame based on state
     def frame_update(self):
         if self.state.FLINCH:
             self.flinch_animation()
@@ -160,8 +174,20 @@ class Player(Entity):
                 for entity in self.game_manager.all_entities:
                     dmg = 2
                     target = 'enemy'
+                    # If overlapping with target
                     if ((entity.name == target and entity != self) and
                             self.game_manager.interaction_manager.is_overlapping(self, entity)):
+
+                        # Create impact sfx
+                        self.effect = Effect(name='impact', game_manager=self.game_manager,
+                                             position=self.position + Vector(5, -15))
+                        if self.frame_index[1] == 5:
+                            self.effect.rotation = 3.14
+                            self.effect.position += Vector(-10, 30)
+                        self.game_manager.add_entity(self.effect)
+                        self.effect = None
+
+                        # Deal damage to a single target
                         entity.deal_damage(dmg)
                         break
 
@@ -197,6 +223,12 @@ class Player(Entity):
                     target = 'enemy'
                     if ((entity.name == target and entity != self) and
                             self.game_manager.interaction_manager.is_overlapping(self, entity)):
+                        self.effect = Effect(name='impact', game_manager=self.game_manager,
+                                             position=self.position + Vector(5, -15))
+                        if self.frame_index[1] == 5:
+                            self.effect.rotation = 3.14
+                            self.effect.position += Vector(-10, 30)
+                        self.game_manager.add_entity(self.effect)
                         entity.deal_damage(dmg)
                         break
 
@@ -256,10 +288,16 @@ class Player(Entity):
             # Damage at 2nd frame
             if self.frame_index[0] == 1:
                 for entity in self.game_manager.all_entities:
-                    dmg = 2
+                    dmg = 1
                     target = 'enemy'
                     if ((entity.kind == target and entity != self) and
                             self.game_manager.interaction_manager.is_overlapping(self, entity)):
+                        self.effect = Effect(name='impact', game_manager=self.game_manager,
+                                             position=self.position + Vector(5, -15))
+                        if self.frame_index[1] == 5:
+                            self.effect.rotation = 3.14
+                            self.effect.position += Vector(-10, 30)
+                        self.game_manager.add_entity(self.effect)
                         entity.deal_damage(dmg)
                         break
 
@@ -304,7 +342,7 @@ class Player(Entity):
             self.frame_index[0] = 0
 
         # Control FPS
-        if self.frame_count % self.walk_frames == 0:
+        if self.frame_count % 5 == 0:
             self.frame_index[0] = (self.frame_index[0] + 1) % self.walk_frames
 
     def move_left_animation(self):
@@ -314,7 +352,7 @@ class Player(Entity):
             self.frame_index[0] = 0
 
         # Control FPS
-        if self.frame_count % self.walk_frames == 0:
+        if self.frame_count % 5 == 0:
             self.frame_index[0] = (self.frame_index[0] + 1) % self.walk_frames
 
     def idle_animation(self):
@@ -333,28 +371,134 @@ class Player(Entity):
                 self.state.ON_LADDER = False
         # ladder climbing movement
         if self.state.ON_LADDER:
-            self.velocity.y += (Vector(0, -3) * self.speed).y
+            self.velocity.y += -3
+
+    def interactions(self):
+        drops = [entity for entity in self.game_manager.all_entities if entity.kind == 'drop']
+
+        for drop in drops:
+            if self.game_manager.interaction_manager.is_overlapping(self, drop):
+                if drop.name == 'heart':
+                    self.lives += 1
+                    self.game_manager.remove_entity(drop)
+                elif drop.name == 'bonus':
+                    self.game_manager.score_counter.add_score(random.randint(3, 30))
+                    self.game_manager.remove_entity(drop)
+                elif drop.name == 'learn_red':
+                    self.shotRed = True
+                    self.game_manager.remove_entity(drop)
+                elif drop.name == 'learn_purple':
+                    self.shotPurple = True
+                    self.game_manager.remove_entity(drop)
+                elif drop.name == 'learn_sp1':
+                    self.shotSpecial = True
+                    self.game_manager.remove_entity(drop)
+                elif drop.name == 'learn_sp2':
+                    self.shotSpecial2 = True
+                    self.game_manager.remove_entity(drop)
+                elif drop.name == 't1':
+                    text = Entity(kind='text', position=Vector(self.game_manager.CANVAS_WIDTH/2, 400),
+                                  img_url="images/texts/text1.png", img_dest_dim=(1287*0.8, 112*0.8))
+                    self.game_manager.add_text(text)
+                elif drop.name == 't2':
+                    text = Entity(kind='text', position=Vector(self.game_manager.CANVAS_WIDTH/2, 400),
+                                  img_url="images/texts/text2.png", img_dest_dim=(1113*0.8, 112*0.8))
+                    self.game_manager.add_text(text)
+                elif drop.name == 't3':
+                    text = Entity(kind='text', position=Vector(self.game_manager.CANVAS_WIDTH/2, 400),
+                                  img_url="images/texts/text3.png", img_dest_dim=(661*0.8, 109*0.8))
+                    self.game_manager.add_text(text)
+                elif drop.name == 't4':
+                    text = Entity(kind='text', position=Vector(self.game_manager.CANVAS_WIDTH/2, 400),
+                                  img_url="images/texts/controls.png", img_dest_dim=(1169*0.8, 519*0.8))
+                    self.game_manager.add_text(text)
+                elif drop.name == 't5':
+                    text = Entity(kind='text', position=Vector(self.game_manager.CANVAS_WIDTH/2, 400),
+                                  img_url="images/texts/text5.png", img_dest_dim=(1278*0.8, 162*0.8))
+                    self.game_manager.add_text(text)
+                elif drop.name == 't6':
+                    text = Entity(kind='text', position=Vector(self.game_manager.CANVAS_WIDTH/2, 400),
+                                  img_url="images/texts/text6.png", img_dest_dim=(707*0.8, 112*0.8))
+                    self.game_manager.add_text(text)
+                elif drop.name == 't7':
+                    text = Entity(kind='text', position=Vector(self.game_manager.CANVAS_WIDTH/2, 400),
+                                  img_url="images/texts/text7.png", img_dest_dim=(1286*0.8, 212*0.8))
+                    self.game_manager.add_text(text)
+                elif drop.name == 't8':
+                    text = Entity(kind='text', position=Vector(self.game_manager.CANVAS_WIDTH/2, 400),
+                                  img_url="images/texts/text8.png", img_dest_dim=(791*0.8, 286*0.8))
+                    self.game_manager.add_text(text)
+                elif drop.name == 't9':
+                    text = Entity(kind='text', position=Vector(self.game_manager.CANVAS_WIDTH/2, 400),
+                                  img_url="images/texts/text9.png", img_dest_dim=(1151*0.8, 280*0.8))
+                    self.game_manager.add_text(text)
+                elif drop.name == 't10':
+                    text = Entity(kind='text', position=Vector(self.game_manager.CANVAS_WIDTH/2, 400),
+                                  img_url="images/texts/text10.png", img_dest_dim=(642*0.8, 269*0.8))
+                    self.game_manager.add_text(text)
+                elif drop.name == 't11':
+                    text = Entity(kind='text', position=Vector(self.game_manager.CANVAS_WIDTH/2, 400),
+                                  img_url="images/texts/text11.png", img_dest_dim=(703*0.8, 274*0.8))
+                    self.game_manager.add_text(text)
+                elif drop.name == 't12':
+                    text = Entity(kind='text', position=Vector(self.game_manager.CANVAS_WIDTH/2, 400),
+                                  img_url="images/texts/text12.png", img_dest_dim=(1291*0.8, 162*0.8))
+                    self.game_manager.add_text(text)
 
     def shoot(self):
-        if self.mana >= 40:
-            self.mana -= 40
-            # Initialise direction of projectile
-            move_right = True
-            adjust_x = 10
-            if self.frame_index[1] == 10:
-                move_right = False
-                adjust_x = -10
+        # Initialise direction of projectile
+        move_right = True
+        adjust_x = 10
+        if self.frame_index[1] == 10:
+            move_right = False
+            adjust_x = -10
 
-            self.projectile = Projectile(kind='player_projectile', game_manager=self.game_manager, damage=0.5,
-                                         position=Vector(self.position.x + adjust_x, self.position.y), speed=1.2)
+        # Spawn projectile
+        if self.state.SLOT1:
+            if self.shotRed and self.mana >= 40:
+                self.mana -= 40
+                self.projectile = Projectile(kind='player_projectile', name='1', game_manager=self.game_manager,
+                                             damage=0.5, position=Vector(self.position.x + adjust_x, self.position.y),
+                                             speed=1.2)
+        elif self.state.SLOT2:
+            if self.shotPurple and self.mana >= 80:
+                self.mana -= 80
+                self.projectile = Projectile(kind='player_projectile', name='2', game_manager=self.game_manager,
+                                             damage=0, position=Vector(self.position.x + adjust_x, self.position.y),
+                                             speed=1.6)
+        elif self.state.SLOT3:
+            if self.shotSpecial and self.mana >= 80:
+                self.mana -= 80
+                self.projectile = Projectile(kind='player_projectile', name='3', game_manager=self.game_manager,
+                                             damage=1.5, position=Vector(self.position.x + adjust_x, self.position.y),
+                                             speed=1.3)
+        elif self.state.SLOT4:
+            if self.shotSpecial2 and self.mana == 120:
+                self.mana -= 120
+                choice = random.randint(1, 2)
+                dmg = 0
+                if choice == 1:
+                    dmg = 10
+                self.projectile = Projectile(kind='player_projectile', name='4', game_manager=self.game_manager,
+                                             damage=dmg, position=Vector(self.position.x + adjust_x, self.position.y),
+                                             speed=1.4)
+
+        if self.projectile is not None:
             self.projectile.is_right = move_right
             self.game_manager.add_entity(self.projectile)
+        self.projectile = None
 
     def deal_damage(self, amount):
         self.state.FLINCH = True
         self.lives -= amount
         if self.lives <= 0:
             self.die()
+
+    def deal_knockback(self, amount, right):
+        if right:
+            self.velocity.add(Vector(amount, 0))
+        else:
+            self.velocity.add(Vector(-amount, 0))
 
     def die(self):
         # Remove player from entity list
@@ -364,13 +508,37 @@ class Player(Entity):
         self.game_manager.welcome_screen.highscore_screen.scores.append(score)
         # Reset the max level reached
         self.game_manager.score_counter.max_level = 0
+        # Reset learnt attacks
+        self.shotRed, self.shotPurple, self.shotSpecial, self.shotSpecial2 = False, False, False, False
         # Change to welcome screen
         self.game_manager.clear_screen()
         self.game_manager.welcome_screen.show_welcome_screen = True
 
     def key_down(self, key):
+        if key == simplegui.KEY_MAP["1"]:
+            self.state.SLOT1 = True
+            self.state.SLOT2 = False
+            self.state.SLOT3 = False
+            self.state.SLOT4 = False
+        if key == simplegui.KEY_MAP["2"]:
+            self.state.SLOT1 = False
+            self.state.SLOT2 = True
+            self.state.SLOT3 = False
+            self.state.SLOT4 = False
+        if key == simplegui.KEY_MAP["3"]:
+            self.state.SLOT1 = False
+            self.state.SLOT2 = False
+            self.state.SLOT3 = True
+            self.state.SLOT4 = False
+        if key == simplegui.KEY_MAP["4"]:
+            self.state.SLOT1 = False
+            self.state.SLOT2 = False
+            self.state.SLOT3 = False
+            self.state.SLOT4 = True
         if key == simplegui.KEY_MAP["space"] and self.state.GROUNDED:
             self.state.JUMP = True
+        if key == simplegui.KEY_MAP['w']:
+            self.state.CLIMB = True
         if key == simplegui.KEY_MAP["a"]:
             self.state.LEFT = True
         if key == simplegui.KEY_MAP["d"]:
@@ -379,8 +547,8 @@ class Player(Entity):
             self.state.PUNCH = True
         if key == simplegui.KEY_MAP["q"]:
             self.state.SHOOT = True
-        if key == simplegui.KEY_MAP['w']:
-            self.state.CLIMB = True
+        if key == simplegui.KEY_MAP['e']:
+            self.state.INTERACT = True
 
     def key_up(self, key):
         if key == simplegui.KEY_MAP["a"]:
@@ -390,6 +558,8 @@ class Player(Entity):
         if key == simplegui.KEY_MAP['w']:
             self.state.CLIMB = False
             self.state.ON_LADDER = False
+        if key == simplegui.KEY_MAP['e']:
+            self.state.INTERACT = False
 
     def recharge_mana(self):
         if self.mana_time % self.mana_recharge_rate == 0:

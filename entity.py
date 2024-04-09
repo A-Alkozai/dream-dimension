@@ -15,13 +15,14 @@ class Entity:
                  column=1,
                  frames=1,
                  game_manager=None,
-                 collision_mask=[]
-                 ):
+                 collision_mask=None,
+                 animated=False):
 
         self.game_manager = game_manager
         self.kind = kind
         self.name = name
         self.collision_mask = collision_mask
+        self.animated = animated
 
         self.position = position
         self.velocity = velocity
@@ -39,7 +40,6 @@ class Entity:
 
         self.row = row
         self.column = column
-        self.totalFrames = frames
         self.frame_count = 0
         self.frame_width = self.img.get_width() / column
         self.frame_height = self.img.get_height() / row
@@ -49,7 +49,8 @@ class Entity:
         self.frame_centre_y = self.frame_height / 2
         self.frame_index = [0, 0]
 
-        self.active = True
+        self.effect = None
+        self.canvas = None
 
     def __str__(self):
         return self.kind
@@ -61,9 +62,7 @@ class Entity:
             pass
 
     def draw(self, canvas):
-        if not self.active:
-            return
-
+        self.canvas = canvas
         frame_centre = (self.frame_width * self.frame_index[0] + self.frame_centre_x,
                         self.frame_height * self.frame_index[1] + self.frame_centre_y)
 
@@ -73,14 +72,20 @@ class Entity:
                           self.position.get_p(),
                           self.img_dest_dim,
                           self.rotation)
+        if self.animated:
+            self.update()
 
     def update(self):
         self.frame_index[0] = (self.frame_index[0] + 1) % self.column
         if self.frame_index[0] == 0:
             self.frame_index[1] = (self.frame_index[1] + 1) % self.row
 
-    def on_collision(self, collider):
-        pass
+    def change_image(self, new_url):
+        self.img_url = new_url
+        self.img = simplegui._load_local_image(new_url)
 
     def deal_damage(self, dmg):
+        pass
+
+    def deal_knockback(self, amount, direction):
         pass

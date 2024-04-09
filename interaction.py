@@ -4,18 +4,20 @@ class Interaction:
 
     def calculate_all_collisions(self, all_entities):
         for entity in all_entities:
-            # Ensures 2 blocks/ladders never collide with each other
-            if entity.kind == 'block' or entity.kind == 'ladder':
+            # Ensures blocks/ladders never collide with itself
+            # Cavity, interact and special kinds do not collide with one another
+            if (entity.kind == 'block' or entity.kind == 'ladder' or
+                    entity.kind == 'cavity' or entity.kind == 'drop' or entity.kind == 'sfx'):
                 continue
 
             for entity2 in all_entities:
                 # Cannot collide with yourself
-                if entity == entity2:
+                if entity == entity2 or entity2.kind == 'cavity' or entity.kind == 'sfx':
                     continue
                 # Calculate collisions between the 2
                 self.calculate_collisions(entity, entity2)
 
-    # Check is 2 entities are overlapping and return True/False
+    # Check if 2 entities are overlapping and return True/False
     def is_overlapping(self, entity, collider):
         collider_edges = self.get_collider_edges(collider)
 
@@ -62,17 +64,24 @@ class Interaction:
 
     # Calculate the edges of an entity
     def get_collider_edges(self, entity):
-        # All entities are 60x60
-        entity_radius = 30
+        # Almost all entities are 60x60
+        entity_radius_x, entity_radius_y = 30, 30
         # Projectiles should have smaller hit-boxes
         if entity.kind == 'player_projectile' or entity.kind == 'enemy_projectile':
-            entity_radius = 20
+            entity_radius_x, entity_radius_y = 15, 15
+        # These blocks have bigger hit-boxes
+        elif entity.name == 'bush_floor':
+            entity_radius_x, entity_radius_y = 30, 40
+        # Buttons have 2 radius
+        elif entity.kind == 'button':
+            entity_radius_x = entity.img_dest_dim[0]/2
+            entity_radius_y = entity.img_dest_dim[1]/2
 
         # Calculation of every edge
-        collider_top_edge = entity.position.y - entity_radius
-        collider_bottom_edge = entity.position.y + entity_radius
-        collider_left_edge = entity.position.x - entity_radius
-        collider_right_edge = entity.position.x + entity_radius
+        collider_top_edge = entity.position.y - entity_radius_y
+        collider_bottom_edge = entity.position.y + entity_radius_y
+        collider_left_edge = entity.position.x - entity_radius_x
+        collider_right_edge = entity.position.x + entity_radius_x
 
         return {
             'top': collider_top_edge,

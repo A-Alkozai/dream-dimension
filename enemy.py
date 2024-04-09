@@ -1,7 +1,10 @@
+import random
+
 from projectile import Projectile
 from vector import Vector
 from state import State
 from entity import Entity
+from effects import Effect
 import math
 
 
@@ -16,51 +19,67 @@ class Enemy(Entity):
         self.attack_frames = attack_frames
         self.flinch_frames = flinch_frames
 
+        # Initialising the states
         self.state = State()
         self.state.PATROL = True
         self.idle_frame = [0, 0]
 
-        # patrol conditions
+        # Patrol conditions
         self.patrol_right = True
         self.patrolled_distance = 0
         self.max_patrol_distance = 250
 
+        # Initialising the player and collision masks
         self.player = self.game_manager.player
-        self.collision_mask = ['ladder', 'enemy_projectile', 'enemy', 'player', 'player_projectile', 'portal']
+        self.collision_mask = ['ladder', 'enemy_projectile', 'enemy', 'player', 'player_projectile', 'portal', 'drop', 'sfx']
 
-        # create tracking and attack distance
+        # Create tracking and attack distance
         self.is_ranged = is_ranged
         if self.is_ranged:
             self.tracking_range = 500
             self.attack_range = 400
+        elif self.name == 'bomber':
+            self.tracking_range = 400
+            self.attack_range = 100
         else:
             self.tracking_range = 400
             self.attack_range = 30
 
+        # Movement speed
         self.speed = speed
-        self.weight = 1.2
+        self.weight = 1.5
 
+        # Health/Dmg
         self.damage = damage
         self.health = health
 
+        # Animation speed
+        self.fps = 1
+
+        # Cooldown for attack
         self.cooldown = cooldown
         self.cooldown_count = 0
-        self.points = points
-        self.projectile = None
 
-        # Mana attributes for enemy
+        # Points given upon death
+        self.points = points
+
+        # Mana attributes
         self.mana_max = mana_max
         self.mana = self.mana_max
         self.mana_recharge_rate = mana_recharge_rate
         self.mana_time = 0
 
+        # Projectile attributes
+        self.projectile = None
+
     def update(self):
         self.recharge_mana()
-        # Update state before updating frame
+        # Update state
         self.state_update()
+        # Update frame
         self.frame_update()
+        # Calculate then add movements
         self.movement()
-        # Add all movements
         self.position.add(self.velocity)
         self.velocity.multiply(0.80)
 
@@ -70,7 +89,7 @@ class Enemy(Entity):
         if self.state.GRAVITY:
             self.velocity.y += self.weight
 
-        # Patrol movements
+        # Patrol movements at 1/2 normal speed
         if self.state.PATROL:
             self.state.ATTACK1 = False
             self.speed *= 0.5
@@ -81,13 +100,13 @@ class Enemy(Entity):
                 self.state.RIGHT = False
                 self.state.LEFT = True
 
+            # Change of direction after certain distance has been walked
             self.patrolled_distance += abs(self.velocity.x)
-
             if self.patrolled_distance >= self.max_patrol_distance:
                 self.patrol_right = not self.patrol_right
                 self.patrolled_distance = 0
 
-        # Move left/right
+        # Left/Right movement
         if self.state.RIGHT:
             self.velocity += Vector(1, 0) * self.speed
             self.idle_frame = [0, 0]
@@ -104,7 +123,7 @@ class Enemy(Entity):
                 self.state.ATTACK1_COOLDOWN = False
                 self.cooldown_count = 0
 
-        # shortest distance
+        # Shortest distance to player
         distance_to_player = math.sqrt((self.player.position.x - self.position.x) ** 2 +
                                        (self.player.position.y - self.position.y) ** 2)
 
@@ -116,7 +135,7 @@ class Enemy(Entity):
             if self.player.position.x < self.position.x:
                 self.idle_frame = [2, 0]
 
-        # If enemy is far from player, move towards player position
+        # If enemy is far from player, but within sight, move towards player position
         elif self.player.position.x - 25 > self.position.x and distance_to_player <= self.tracking_range:
             self.state.RIGHT = True
             self.state.LEFT = False
@@ -126,7 +145,7 @@ class Enemy(Entity):
             self.state.RIGHT = False
             self.state.PATROL = False
 
-        # Enemy patrol state
+        # If outside of sight range, patrol state activated
         else:
             self.state.PATROL = True
 
@@ -181,6 +200,12 @@ class Enemy(Entity):
             if self.name == 'warrior':
                 self.frame_count = -5
                 self.fps = 6
+            elif self.name == 'fighter':
+                self.frame_count = -5
+                self.fps = 6
+            elif self.name == 'swordsman':
+                self.frame_count = -4
+                self.fps = 5
             else:
                 self.frame_count = -15
                 self.fps = 16
@@ -189,6 +214,7 @@ class Enemy(Entity):
         if self.frame_count % self.fps == 0:
             self.frame_index[0] = (self.frame_index[0] + 1) % self.attack_frames
 
+            # Orcs
             # Damage condition for warrior
             if self.name == 'warrior' and self.frame_index[0] == 1:
                 dmg = 1
@@ -202,6 +228,19 @@ class Enemy(Entity):
             # Damage condition for hunter
             elif self.name == 'hunter' and self.frame_index[0] == 3:
                 self.shoot()
+
+            # Skeletons
+            # Damage condition for fighter
+            elif self.name == 'fighter' and self.frame_index[0] == 2:
+                dmg = 1
+                if self.game_manager.interaction_manager.is_overlapping(self, self.player):
+                    self.player.deal_damage(dmg)
+            elif self.name == 'swordsman' and self.frame_index[0] == 3:
+                dmg = 1
+                if self.game_manager.interaction_manager.is_overlapping(self, self.player):
+                    self.player.deal_damage(dmg)
+            elif self.name == 'bomber':
+                self.die()
 
             # Turns off animation at last frame
             if self.frame_index[0] == 0:
@@ -238,10 +277,14 @@ class Enemy(Entity):
                 move_right = False
                 adjust_x = -10
 
-            self.projectile = Projectile(kind='enemy_projectile', game_manager=self.game_manager,
-                                         position=Vector(self.position.x + adjust_x, self.position.y), speed=1.2)
+            if self.name == 'shaman':
+                self.projectile = Projectile(kind='enemy_projectile', name='5', game_manager=self.game_manager,
+                                             position=Vector(self.position.x + adjust_x, self.position.y), speed=1.2)
+            elif self.name == 'hunter':
+                self.projectile = Projectile(kind='enemy_projectile', name='6', game_manager=self.game_manager,
+                                             position=Vector(self.position.x + adjust_x, self.position.y), speed=1.2)
+
             self.projectile.is_right = move_right
-            self.projectile.is_red = False
             self.game_manager.add_entity(self.projectile)
 
     def deal_damage(self, amount):
@@ -250,9 +293,34 @@ class Enemy(Entity):
         if self.health <= 0:
             self.die()
 
+    def deal_knockback(self, amount, right):
+        if right:
+            self.velocity.add(Vector(amount, 0))
+        else:
+            self.velocity.add(Vector(-amount, 0))
+
+    def item_drops(self):
+        chance = random.randint(1, 15)
+        if chance == 15:
+            heart_drop = Entity(kind='drop', name='heart', position=self.position, img_url='images/heart.png',
+                                img_dest_dim=(40, 40))
+            self.game_manager.add_entity(heart_drop)
+        chance = random.randint(1, 20)
+        if chance == 20:
+            bonus_drop = Entity(kind='drop', name='bonus', position=self.position, img_dest_dim=(50, 50),
+                                img_url='images/interactables/dice.png')
+            self.game_manager.add_entity(bonus_drop)
+
     def die(self):
         self.game_manager.score_counter.add_score(self.points)
         self.destroy()
+        if self.name == 'bomber':
+            position = Vector(self.position.x, self.position.y-100)
+            self.effect = Effect('enemy_explosion', position, self.game_manager)
+        else:
+            self.effect = Effect('blood', self.position, self.game_manager)
+        self.game_manager.add_entity(self.effect)
+        self.item_drops()
 
     def recharge_mana(self):
         if self.mana_time % self.mana_recharge_rate == 0:
