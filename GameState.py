@@ -46,7 +46,6 @@ class GameState:
         self.map = MapManager(self)
         self.background = Background(self.CANVAS_WIDTH, self.CANVAS_HEIGHT)
         self.is_game_started = False
-        self.is_story_finished = False
 
         # Create welcome screen
         self.welcome_screen = WelcomeScreen(self, self.interaction_manager)

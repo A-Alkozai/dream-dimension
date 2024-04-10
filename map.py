@@ -46,219 +46,52 @@ class MapManager:
 
                 match cell:
                     # Dungeon <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
-                    case 'df1':
+                    case 'df1' | 'df2'| 'df3' | 'dc1' | 'dc2' | 'dc3' | 'drw' | 'dlw' | 'db1' | 'db2' | 'dl' | 'dp1' | 'dp2' | 'dp3':
                         entity_kind = 'block'
-                        entity_name = 'd_floor'
-                        block_entity = Entity(kind=entity_kind, name=entity_name, position=cell_pos, img_url=cell_image,
-                                              img_dest_dim=(60, 60))
-                    case 'df2':
-                        entity_kind = 'block'
-                        entity_name = 'd_floor'
-                        block_entity = Entity(kind=entity_kind, name=entity_name, position=cell_pos, img_url=cell_image,
-                                              img_dest_dim=(60, 60))
-                    case 'df3':
-                        entity_kind = 'block'
-                        entity_name = 'd_floor'
-                        block_entity = Entity(kind=entity_kind, name=entity_name, position=cell_pos, img_url=cell_image,
-                                              img_dest_dim=(60, 60))
-                    case 'dc1':
-                        entity_kind = 'block'
-                        entity_name = 'd_ceiling'
-                        block_entity = Entity(kind=entity_kind, name=entity_name, position=cell_pos, img_url=cell_image,
-                                              img_dest_dim=(60, 60))
-                    case 'dc2':
-                        entity_kind = 'block'
-                        entity_name = 'd_ceiling'
-                        block_entity = Entity(kind=entity_kind, name=entity_name, position=cell_pos, img_url=cell_image,
-                                              img_dest_dim=(60, 60))
-                    case 'dc3':
-                        entity_kind = 'block'
-                        entity_name = 'd_ceiling'
+                        entity_name = 'dungeon'
                         block_entity = Entity(kind=entity_kind, name=entity_name, position=cell_pos, img_url=cell_image,
                                               img_dest_dim=(60, 60))
                     case 'dc':
                         entity_kind = 'cavity'
-                        entity_name = 'd_cavity'
+                        entity_name = 'dungeon'
                         block_entity = Entity(kind=entity_kind, name=entity_name, position=cell_pos, img_url=cell_image,
                                               img_dest_dim=(60, 60))
-                    case 'drw':
+                    case 'dw1' | 'dw2' | 'dw3':
                         entity_kind = 'block'
-                        entity_name = 'd_wall'
-                        block_entity = Entity(kind=entity_kind, name=entity_name, position=cell_pos, img_url=cell_image,
-                                              img_dest_dim=(60, 60))
-                    case 'dlw':
-                        entity_kind = 'block'
-                        entity_name = 'd_wall'
-                        block_entity = Entity(kind=entity_kind, name=entity_name, position=cell_pos, img_url=cell_image,
-                                              img_dest_dim=(60, 60))
-                    case 'db1':
-                        entity_kind = 'block'
-                        entity_name = 'd_wall'
-                        block_entity = Entity(kind=entity_kind, name=entity_name, position=cell_pos, img_url=cell_image,
-                                              img_dest_dim=(60, 60))
-                    case 'db2':
-                        entity_kind = 'block'
-                        entity_name = 'd_wall'
-                        block_entity = Entity(kind=entity_kind, name=entity_name, position=cell_pos, img_url=cell_image,
-                                              img_dest_dim=(60, 60))
-                    case 'dl':
-                        entity_kind = 'ladder'
-                        entity_name = 'd_ladder'
-                        block_entity = Entity(kind=entity_kind, name=entity_name, position=cell_pos, img_url=cell_image,
-                                              img_dest_dim=(60, 60))
-                    case 'dp1':
-                        entity_kind = 'block'
-                        entity_name = 'd_wall'
-                        block_entity = Entity(kind=entity_kind, name=entity_name, position=cell_pos, img_url=cell_image,
-                                              img_dest_dim=(60, 60))
-                    case 'dp2':
-                        entity_kind = 'block'
-                        entity_name = 'd_wall'
-                        block_entity = Entity(kind=entity_kind, name=entity_name, position=cell_pos, img_url=cell_image,
-                                              img_dest_dim=(60, 60))
-                    case 'dp3':
-                        entity_kind = 'block'
-                        entity_name = 'd_wall'
-                        block_entity = Entity(kind=entity_kind, name=entity_name, position=cell_pos, img_url=cell_image,
-                                              img_dest_dim=(60, 60))
-                    case 'dw1':
-                        entity_kind = 'block'
-                        entity_name = 'd_wall'
+                        entity_name = 'dungeon'
                         block_entity = Entity(kind=entity_kind, name=entity_name, position=cell_pos, img_url=cell_image,
                                               img_dest_dim=(60, 120))
-                    case 'dw2':
-                        entity_kind = 'block'
-                        entity_name = 'd_wall'
-                        block_entity = Entity(kind=entity_kind, name=entity_name, position=cell_pos, img_url=cell_image,
-                                              img_dest_dim=(60, 120))
-                    case 'dw3':
-                        entity_kind = 'block'
-                        entity_name = 'd_wall'
-                        block_entity = Entity(kind=entity_kind, name=entity_name, position=cell_pos, img_url=cell_image,
-                                              img_dest_dim=(60, 120))
-                    case 'sr':
+                    case 'sr' | 'sl':
                         entity_kind = 'cavity'
                         entity_name = 'sign'
                         block_entity = Entity(kind=entity_kind, name=entity_name, position=cell_pos, img_url=cell_image,
                                               img_dest_dim=(60, 60))
-                    case 'sl':
-                        entity_kind = 'cavity'
-                        entity_name = 'sign'
-                        block_entity = Entity(kind=entity_kind, name=entity_name, position=cell_pos, img_url=cell_image,
-                                              img_dest_dim=(60, 60))
-
                     # Jungle <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
-                    case 'jf':
+                    case 'jf' | 'jfrw' | 'jflw' | 'jfc' | 'jfl' | 'jfr' | 'jrp1' | 'jrp2' | 'jrp3' | 'jgp1' | 'jgp2' | 'jgp3' | 'jrf1' | 'jrf2':
                         entity_kind = 'block'
-                        entity_name = 'f_floor'
-                        block_entity = Entity(kind=entity_kind, name=entity_name, position=cell_pos, img_url=cell_image,
-                                              img_dest_dim=(60, 60))
-                    case 'jfrw':
-                        entity_kind = 'block'
-                        entity_name = 'f_floor'
-                        block_entity = Entity(kind=entity_kind, name=entity_name, position=cell_pos, img_url=cell_image,
-                                              img_dest_dim=(60, 60))
-                    case 'jflw':
-                        entity_kind = 'block'
-                        entity_name = 'f_floor'
-                        block_entity = Entity(kind=entity_kind, name=entity_name, position=cell_pos, img_url=cell_image,
-                                              img_dest_dim=(60, 60))
-                    case 'jfc':
-                        entity_kind = 'block'
-                        entity_name = 'f_floor'
-                        block_entity = Entity(kind=entity_kind, name=entity_name, position=cell_pos, img_url=cell_image,
-                                              img_dest_dim=(60, 60))
-                    case 'jfl':
-                        entity_kind = 'block'
-                        entity_name = 'f_floor'
-                        block_entity = Entity(kind=entity_kind, name=entity_name, position=cell_pos, img_url=cell_image,
-                                              img_dest_dim=(60, 60))
-                    case 'jfr':
-                        entity_kind = 'block'
-                        entity_name = 'f_floor'
+                        entity_name = 'jungle'
                         block_entity = Entity(kind=entity_kind, name=entity_name, position=cell_pos, img_url=cell_image,
                                               img_dest_dim=(60, 60))
                     case 'jc':
                         entity_kind = 'cavity'
-                        entity_name = 'j_cavity'
+                        entity_name = 'jungle'
                         block_entity = Entity(kind=entity_kind, name=entity_name, position=cell_pos, img_url=cell_image,
                                               img_dest_dim=(60, 60))
-                    case 'jw1':
+                    case 'jw1' | 'jw2':
                         entity_kind = 'block'
-                        entity_name = 'j_wall'
+                        entity_name = 'jungle'
                         block_entity = Entity(kind=entity_kind, name=entity_name, position=cell_pos, img_url=cell_image,
                                               img_dest_dim=(120, 60))
-                    case 'jw2':
+                    case 'jp1' | 'jp2':
                         entity_kind = 'block'
-                        entity_name = 'j_wall'
-                        block_entity = Entity(kind=entity_kind, name=entity_name, position=cell_pos, img_url=cell_image,
-                                              img_dest_dim=(120, 60))
-                    case 'jp1':
-                        entity_kind = 'block'
-                        entity_name = 'j_floor'
+                        entity_name = 'jungle'
                         block_entity = Entity(kind=entity_kind, name=entity_name, position=cell_pos, img_url=cell_image,
                                               img_dest_dim=(60, 90))
-                    case 'jp2':
-                        entity_kind = 'block'
-                        entity_name = 'j_floor'
-                        block_entity = Entity(kind=entity_kind, name=entity_name, position=cell_pos, img_url=cell_image,
-                                              img_dest_dim=(60, 90))
-                    case 'jp1.1':
+                    case 'jp1.1' | 'jp1.2' | 'jp1.3':
                         entity_kind = 'block'
                         entity_name = 'bush_floor'
                         block_entity = Entity(kind=entity_kind, name=entity_name, position=cell_pos, img_url=cell_image,
                                               img_dest_dim=(60, 90))
-                    case 'jp1.2':
-                        entity_kind = 'block'
-                        entity_name = 'bush_floor'
-                        block_entity = Entity(kind=entity_kind, name=entity_name, position=cell_pos, img_url=cell_image,
-                                              img_dest_dim=(60, 90))
-                    case 'jp1.3':
-                        entity_kind = 'block'
-                        entity_name = 'bush_floor'
-                        block_entity = Entity(kind=entity_kind, name=entity_name, position=cell_pos, img_url=cell_image,
-                                              img_dest_dim=(60, 90))
-                    case 'jrp1':
-                        entity_kind = 'block'
-                        entity_name = 'j_floor'
-                        block_entity = Entity(kind=entity_kind, name=entity_name, position=cell_pos, img_url=cell_image,
-                                              img_dest_dim=(60, 60))
-                    case 'jrp2':
-                        entity_kind = 'block'
-                        entity_name = 'j_floor'
-                        block_entity = Entity(kind=entity_kind, name=entity_name, position=cell_pos, img_url=cell_image,
-                                              img_dest_dim=(60, 60))
-                    case 'jrp3':
-                        entity_kind = 'block'
-                        entity_name = 'j_floor'
-                        block_entity = Entity(kind=entity_kind, name=entity_name, position=cell_pos, img_url=cell_image,
-                                              img_dest_dim=(60, 60))
-                    case 'jgp1':
-                        entity_kind = 'block'
-                        entity_name = 'j_floor'
-                        block_entity = Entity(kind=entity_kind, name=entity_name, position=cell_pos, img_url=cell_image,
-                                              img_dest_dim=(60, 60))
-                    case 'jgp2':
-                        entity_kind = 'block'
-                        entity_name = 'j_floor'
-                        block_entity = Entity(kind=entity_kind, name=entity_name, position=cell_pos, img_url=cell_image,
-                                              img_dest_dim=(60, 60))
-                    case 'jgp3':
-                        entity_kind = 'block'
-                        entity_name = 'j_floor'
-                        block_entity = Entity(kind=entity_kind, name=entity_name, position=cell_pos, img_url=cell_image,
-                                              img_dest_dim=(60, 60))
-                    case 'jrf1':
-                        entity_kind = 'block'
-                        entity_name = 'j_floor'
-                        block_entity = Entity(kind=entity_kind, name=entity_name, position=cell_pos, img_url=cell_image,
-                                              img_dest_dim=(60, 60))
-                    case 'jrf2':
-                        entity_kind = 'block'
-                        entity_name = 'j_floor'
-                        block_entity = Entity(kind=entity_kind, name=entity_name, position=cell_pos, img_url=cell_image,
-                                              img_dest_dim=(60, 60))
-                    # Universal <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
                     case 'l':
                         entity_kind = 'ladder'
                         block_entity = Entity(kind=entity_kind, position=cell_pos, img_url=cell_image,
