@@ -1,15 +1,25 @@
-- enemy.py: This is the enemy that the player can kill
-- entity.py: This is the class which every 'gameobject' inherits from. It contains important variables such as position, velocity etc
-- GameState.py: This is the class that manages the whole game. It is in charge of drawing all entities as well as managing ui screens.
-- healthbar.py: This is the ui element for th eplayer's hearts
--  highscore_screen.py: This is a UI panel that displays the score of the players last run
-- interaction.py: This handles colission between entities
-- main.y: this is the entry point of the project
-- mana.py: This is the ui element fr player 'energy'/'mana'
+- main.py: main entry-point of the project
+- GameState.py: Class that manages the whole game. It is in charge of drawing & updating all entities as well as managing ui screens
+- vector.py: Class that handles all the positioning and velocity of all 'game objects'
+- interaction.py: This handles collision between entities
+- entity.py: This is the class which every 'game object' inherits from. It contains important variables such as position, velocity, img_url, etc
+- state.py: This file contains entity states
+- player.py: This is the class that manages player behaviour, animation, movement, etc
+- enemy.py: This is the class that manages enemy behaviour, animation, movement, etc
+- projectile.py: This is the class that manages projectile behaviour, animation, movement, etc
+- effects.py: This is the class that manages sfx behaviour, animation, etc
+- portal.py: This is the class that manages portal behaviour, animation, map change, etc
+
+- map.py: Class that reads the map.json file and creates the map of chosen level
 - map.json: In this file is an array of room layouts defining the game map
-- player.py: This is the class that describes player behabiour
-- projectile.py: This class handles the bullets/projectiles that both the player and enemies shoot
-- scorecounter.py: This is the UI element keeping track of the score
-- state.py: This file manages entity state, handling animation and various other situations
-- vector.py: this is the vector class provided to us
-- welcome_screen.py: This is the main menu that displays when first running the game
+
+- welcome_screen.py: This is the main menu that displays when first running the game. It is managed fully by this class
+- story_screen.py: This is the story presented before the game begins
+- highscore_screen.py: This is the screen that shows your highscore and previous scores  
+- control_screen.py: This is the screen that shows the controls to play the game
+- credit_screen.py: This is the screen that shows the name of our team members
+
+- scorecounter.py: Class the tracks and displays the score & level during gameplay
+- healthbar.py: Class that displays the health of player during gameplay
+- mana_bar.py: Class that displays the health of player during gameplay
+- slot.py: Class that displays the current attack move the player has selected
