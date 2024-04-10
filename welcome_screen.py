@@ -9,7 +9,7 @@ from vector import Vector
 class Background(Entity):
     def __init__(self, canvas_width, canvas_height):
         super().__init__(position=Vector(canvas_width/2, canvas_height/2),
-                         img_url="images/background.png",
+                         img_url="images/main_menu_bg.jpg",
                          img_dest_dim=(canvas_width, canvas_height))
 
 
@@ -36,36 +36,17 @@ class WelcomeScreen:
         self.background_entity = Background(self.canvas_width, self.canvas_height)
 
         # Initialise the 4 buttons
-        self.play_button = Entity(kind='button', position=Vector(self.canvas_width / 2, 515), img_url="images/buttons/start_game.png", img_dest_dim=(520, 92))
+        self.play_button = Entity(kind='button', position=Vector(self.canvas_width / 2, 315), img_url="images/buttons/start_game.png", img_dest_dim=(520, 92))
 
-        self.highscore_button = Entity(kind='button', position=Vector(self.canvas_width / 2, 625), img_url="images/buttons/highscore.png", img_dest_dim=(371, 82))
+        self.highscore_button = Entity(kind='button', position=Vector(self.canvas_width / 2, 425), img_url="images/buttons/highscore.png", img_dest_dim=(371, 82))
 
-        self.controls_button = Entity(kind='button', position=Vector(self.canvas_width / 2, 725), img_url="images/buttons/controls.png", img_dest_dim=(346, 81))
+        self.controls_button = Entity(kind='button', position=Vector(self.canvas_width / 2, 525), img_url="images/buttons/controls.png", img_dest_dim=(346, 81))
 
-        self.credits_button = Entity(kind='button', position=Vector(self.canvas_width / 2, 825), img_url="images/buttons/credits.png", img_dest_dim=(296, 82))
+        self.credits_button = Entity(kind='button', position=Vector(self.canvas_width / 2, 625), img_url="images/buttons/credits.png", img_dest_dim=(296, 82))
 
     def draw(self, canvas):
         if self.show_welcome_screen:
             self.background_entity.draw(canvas)
-
-            # Draw welcome text
-            welcome_text = "Welcome to the Game!"
-            welcome_color = "White"
-            canvas.draw_text(welcome_text, [(self.canvas_width - len(welcome_text) * 12)/2 - 80, 150], 36, welcome_color, "sans-serif")
-
-            # Draw description text
-            description_text = ("You are in Royal Holloway, and you have a Project due in tomorrow. "
-                                "You want to complete that project that day, so you walk into the library. "
-                                "You see free muffins, and you take one. You make your way to silent study. "
-                                "You take a bite....And now you suddenly get teleported to a different dimension. "
-                                "GOAL: To escape the dimension error and go back to reality to complete your Project")
-
-            # Split into separate sentences
-            description_sentences = description_text.split(". ")
-
-            # Draw each sentence underneath each other with more spacing
-            for i, sentence in enumerate(description_sentences):
-                canvas.draw_text(sentence, [(self.canvas_width - len(sentence) * 6)/2 - 80, 220 + i * 30], 18, welcome_color, "sans-serif")
 
             # Draw buttons
             self.play_button.draw(canvas)

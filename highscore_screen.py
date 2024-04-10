@@ -19,7 +19,7 @@ class HighscoreScreen:
         self.highscore = 0
 
         # Creating background and back_button
-        self.background_entity = Background(self.canvas_width, self.canvas_height, "images/background.png")
+        self.background_entity = Background(self.canvas_width, self.canvas_height, "images/main_menu_bg.jpg")
         self.back_button = Entity(kind='button', position=Vector(200, 1000), img_url="images/buttons/back.png", img_dest_dim=(286*1.3, 140*1.3))
 
     def draw(self, canvas):

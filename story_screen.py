@@ -20,7 +20,7 @@ class StoryScreen:
         self.screen3 = False
 
         # Creating background and buttons
-        self.background_entity = Background(self.canvas_width, self.canvas_height, "images/background.png")
+        self.background_entity = Background(self.canvas_width, self.canvas_height, "images/main_menu_bg.jpg")
         self.choice1 = Entity(kind='button', position=Vector(self.canvas_width/2, 700), img_url="images/buttons/choice1.png",
                               img_dest_dim=(775 * 1, 78 * 1))
         self.choice2 = Entity(kind='button', position=Vector(self.canvas_width/2, 700), img_url="images/buttons/choice2.png",
